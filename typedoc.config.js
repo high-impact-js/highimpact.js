@@ -15,9 +15,8 @@ const config = {
     ],
     out: "www/api",
     readme: "none",
-    entryDocument: "index.md",
-    githubPages: true,
-    hideInPageTOC: true
+    entryFileName: "index",
+    githubPages: true
 };
 export default config;
 export { config as 'module.exports' } // dummy CommonJS export
