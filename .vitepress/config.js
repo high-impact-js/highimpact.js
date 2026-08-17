@@ -9,7 +9,7 @@ export default defineConfig({
     title: "High Impact JS",
     description: "High Impact Advertising - Reimagined",
     lastUpdated: true,
-    base: "/highimpact.js/",
+    base: "/",
     publicDir: "public",
     cleanUrls: true,
     transformPageData(pageData) {
@@ -37,11 +37,11 @@ export default defineConfig({
             {
                 rel: "apple-touch-icon",
                 sizes: "180x180",
-                href: "/highimpact.js/favicons/apple-touch-icon.png"
+                href: "/favicons/apple-touch-icon.png"
             }
         ],
-        ["link", { rel: "icon", type: "image/svg+xml", href: "/highimpact.js/favicons/hi-favicon.svg" }],
-        ["link", { rel: "manifest", href: "/highimpact.js/favicons/site.webmanifest" }],
+        ["link", { rel: "icon", type: "image/svg+xml", href: "/favicons/hi-favicon.svg" }],
+        ["link", { rel: "manifest", href: "/favicons/site.webmanifest" }],
         [
             "meta",
             {

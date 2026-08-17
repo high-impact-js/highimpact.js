@@ -3,7 +3,7 @@
     "short_name": "High Impact JS",
     "icons": [
         {
-            "src": "/highimpact.js/favicons/hi-icon.png",
+            "src": "/favicons/hi-icon.png",
             "sizes": "600x600",
             "type": "image/png"
         }
