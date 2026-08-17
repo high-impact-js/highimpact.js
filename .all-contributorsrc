@@ -1,92 +1,82 @@
 {
-  "projectName": "advantage",
-  "projectOwner": "get-advantage",
-  "files": [
-    "README.md"
-  ],
-  "commitType": "docs",
-  "commitConvention": "angular",
-  "contributorsPerLine": 7,
-  "contributors": [
-    {
-      "login": "pattan",
-      "name": "Patrik Wilhelmsson",
-      "avatar_url": "https://avatars.githubusercontent.com/u/1073964?v=4",
-      "profile": "https://github.com/pattan",
-      "contributions": [
-        "doc",
-        "ideas"
-      ]
-    },
-    {
-      "login": "pontusarmini",
-      "name": "Pontus Armini",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4329077?v=4",
-      "profile": "https://github.com/pontusarmini",
-      "contributions": [
-        "code",
-        "doc",
-        "ideas"
-      ]
-    },
-    {
-      "login": "rebeckasjostrom1",
-      "name": "Rebecka Sjöström",
-      "avatar_url": "https://avatars.githubusercontent.com/u/73482574?v=4",
-      "profile": "https://github.com/rebeckasjostrom1",
-      "contributions": [
-        "doc",
-        "ideas"
-      ]
-    },
-    {
-      "login": "dsoohn",
-      "name": "Daniel Granlund",
-      "avatar_url": "https://avatars.githubusercontent.com/u/27854867?v=4",
-      "profile": "https://github.com/dsoohn",
-      "contributions": [
-        "design"
-      ]
-    },
-    {
-      "login": "sannheim",
-      "name": "Joakim Sannheim",
-      "avatar_url": "https://avatars.githubusercontent.com/u/26486263?v=4",
-      "profile": "https://github.com/sannheim",
-      "contributions": [
-        "code"
-      ]
-    },
-    {
-      "login": "erikarvidssonmadington",
-      "name": "erikarvidssonmadington",
-      "avatar_url": "https://avatars.githubusercontent.com/u/73878569?v=4",
-      "profile": "https://github.com/erikarvidssonmadington",
-      "contributions": [
-        "ideas"
-      ]
-    },
-    {
-      "login": "linusforsell",
-      "name": "Linus Forsell",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4910742?v=4",
-      "profile": "https://github.com/linusforsell",
-      "contributions": [
-        "doc",
-        "ideas",
-        "code"
-      ]
-    },
-    {
-      "login": "NicolayKjarnet",
-      "name": "Nicolay Kjærnet",
-      "avatar_url": "https://avatars.githubusercontent.com/u/89392338?v=4",
-      "profile": "http://nicolaykjaernet.com",
-      "contributions": [
-        "code",
-        "doc",
-        "ideas"
-      ]
-    }
-  ]
+    "projectName": "advantage",
+    "projectOwner": "get-advantage",
+    "files": ["README.md"],
+    "commitType": "docs",
+    "commitConvention": "angular",
+    "contributorsPerLine": 7,
+    "contributors": [
+        {
+            "login": "pattan",
+            "name": "Patrik Wilhelmsson",
+            "avatar_url": "https://avatars.githubusercontent.com/u/1073964?v=4",
+            "profile": "https://github.com/pattan",
+            "contributions": ["doc", "ideas"]
+        },
+        {
+            "login": "pontusarmini",
+            "name": "Pontus Armini",
+            "avatar_url": "https://avatars.githubusercontent.com/u/4329077?v=4",
+            "profile": "https://github.com/pontusarmini",
+            "contributions": ["code", "doc", "ideas"]
+        },
+        {
+            "login": "rebeckasjostrom1",
+            "name": "Rebecka Sjöström",
+            "avatar_url": "https://avatars.githubusercontent.com/u/73482574?v=4",
+            "profile": "https://github.com/rebeckasjostrom1",
+            "contributions": ["doc", "ideas"]
+        },
+        {
+            "login": "dsoohn",
+            "name": "Daniel Granlund",
+            "avatar_url": "https://avatars.githubusercontent.com/u/27854867?v=4",
+            "profile": "https://github.com/dsoohn",
+            "contributions": ["design"]
+        },
+        {
+            "login": "sannheim",
+            "name": "Joakim Sannheim",
+            "avatar_url": "https://avatars.githubusercontent.com/u/26486263?v=4",
+            "profile": "https://github.com/sannheim",
+            "contributions": ["code"]
+        },
+        {
+            "login": "erikarvidssonmadington",
+            "name": "erikarvidssonmadington",
+            "avatar_url": "https://avatars.githubusercontent.com/u/73878569?v=4",
+            "profile": "https://github.com/erikarvidssonmadington",
+            "contributions": ["ideas"]
+        },
+        {
+            "login": "linusforsell",
+            "name": "Linus Forsell",
+            "avatar_url": "https://avatars.githubusercontent.com/u/4910742?v=4",
+            "profile": "https://github.com/linusforsell",
+            "contributions": ["doc", "ideas", "code"]
+        },
+        {
+            "login": "NicolayKjarnet",
+            "name": "Nicolay Kjærnet",
+            "avatar_url": "https://avatars.githubusercontent.com/u/89392338?v=4",
+            "profile": "http://nicolaykjaernet.com",
+            "contributions": ["code", "doc", "ideas"]
+        },
+        {
+            "login": "patrik-eriksson1",
+            "name": "Patrik Eriksson",
+            "avatar_url": "https://avatars.githubusercontent.com/u/167439779?v=4",
+            "profile": "https://github.com/patrik-eriksson1",
+            "contributions": ["code", "doc", "ideas"]
+        },
+        {
+            "login": "billyohgren",
+            "name": "Billy Ohgren",
+            "avatar_url": "https://avatars.githubusercontent.com/u/1451050?v=4",
+            "profile": "https://github.com/billyohgren",
+            "contributions": ["code", "doc", "ideas"]
+        }
+    ],
+    "repoType": "github"
 }
+
