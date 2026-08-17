@@ -2,7 +2,14 @@
     "github": {
         "release": true
     },
+    "npm": {
+        "skipChecks": true
+    },
     "git": {
+        "requireBranch": "main",
+        "pushRepo": "highimpact",
+        "tagName": "hijs-v${version}",
+        "tagMatch": "hijs-v*",
         "commitMessage": "chore: release v${version}"
     },
     "plugins": {

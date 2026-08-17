@@ -1,0 +1,63 @@
+name: Release
+
+on:
+    workflow_dispatch:
+
+# `contents: write` lets Release-It commit, tag, push, and create the GitHub
+# release. `id-token: write` enables npm trusted publishing via OIDC.
+permissions:
+    contents: write
+    id-token: write
+
+concurrency:
+    group: release
+    cancel-in-progress: false
+
+jobs:
+    release:
+        # Releases must originate from the canonical Highimpact repository.
+        if: github.repository == 'high-impact-js/highimpact.js' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out main with tags
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  # Release-It supports Node 22, and npm trusted publishing
+                  # requires Node 22.14.0 or newer.
+                  node-version: 22.14.0
+                  registry-url: https://registry.npmjs.org
+                  package-manager-cache: false
+
+            - name: Install npm with trusted publishing support
+              run: npm install --global npm@11.5.1
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Test
+              run: npm test -- --runInBand
+
+            - name: Build package
+              run: npm run build
+
+            # Release-It is configured to push to the `highimpact` remote.
+            # checkout creates `origin`, so create the matching remote using
+            # the persisted GitHub Actions credentials.
+            - name: Configure release remote
+              run: git remote add highimpact "https://github.com/${{ github.repository }}.git"
+
+            - name: Configure release commit author
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            - name: Release and publish
+              run: npm exec release-it -- --ci
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
