@@ -1,13 +1,13 @@
 ---
 name: Bug report
-about: Create a report to help us improve Advantage
+about: Create a report to help us improve HighImpact.js
 title: ''
 labels: bug
 assignees: ''
 
 ---
 
-Thanks for helping us improve Advantage! 🙏 
+Thanks for helping us improve HighImpact.js! 🙏
 
 **Describe the bug**
 A clear and concise description of what the bug is.
