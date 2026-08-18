@@ -274,7 +274,7 @@ layout: page
           <span style="padding-right: 8px">Get started</span>
           <img src="/icons/chevron-right.svg" width="20" height="20" />
         </a>
-        <a href="https://github.com/get-advantage/advantage" class="hero-action primary">
+        <a href="https://github.com/high-impact-js/highimpact.js" class="hero-action primary">
           <span style="padding-right: 8px">View on Github</span>
         </a>
       </div>
