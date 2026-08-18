@@ -12,7 +12,7 @@
     <div id="second-element-to-be-wrapped"><h2>This should be wrapped</h2></div>
 
     <script type="module">
-        import { Advantage, advantageWrapAdSlotElement } from 'http://localhost:8000/advantage.js';
+        import { Advantage, advantageWrapAdSlotElement } from 'http://localhost:8000/advantage/index.js';
         if(window.advantageCmdQueue) {
             window.advantageCmdQueue.push((advantageWrapAdSlotElement) => {
                 advantageWrapAdSlotElement(document.getElementById('first-element-to-be-wrapped'));
@@ -26,4 +26,3 @@
     </script>
 </body>
 </html>
-
