@@ -1,4 +1,5 @@
 import { collectIframes, traverseNodes } from "./misc";
+import { jest } from "@jest/globals";
 import { JSDOM } from "jsdom";
 
 describe("collectIframes", () => {

@@ -1,4 +1,4 @@
-import { ADVANTAGE } from "./messaging";
+import { ADVANTAGE, sendMessageAndOpenChannel } from "./messaging";
 
 describe("sendMessageAndOpenChannel", () => {
     it("should export ADVANTAGE constant", () => {
@@ -6,7 +6,6 @@ describe("sendMessageAndOpenChannel", () => {
     });
 
     it("should be importable without errors", () => {
-        const { sendMessageAndOpenChannel } = require("./messaging");
         expect(typeof sendMessageAndOpenChannel).toBe("function");
     });
 });

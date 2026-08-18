@@ -1,7 +1,14 @@
 // Test setup file for Jest
 
 // Add polyfills for jsdom environment
+import { jest } from "@jest/globals";
 import { TextEncoder, TextDecoder } from "util";
+import {
+    ReadableStream,
+    TransformStream,
+    WritableStream
+} from "node:stream/web";
+import { MessageChannel, MessagePort } from "node:worker_threads";
 
 if (typeof global.TextEncoder === "undefined") {
     global.TextEncoder = TextEncoder as unknown as typeof global.TextEncoder;   
@@ -9,6 +16,21 @@ if (typeof global.TextEncoder === "undefined") {
 
 if (typeof global.TextDecoder === "undefined") {
     global.TextDecoder = TextDecoder as any;
+}
+
+if (typeof globalThis.ReadableStream === "undefined") {
+    Object.defineProperty(globalThis, "ReadableStream", {
+        value: ReadableStream,
+        writable: true
+    });
+    Object.defineProperty(globalThis, "TransformStream", {
+        value: TransformStream,
+        writable: true
+    });
+    Object.defineProperty(globalThis, "WritableStream", {
+        value: WritableStream,
+        writable: true
+    });
 }
 
 // Mock logger for tests to prevent runtime errors
@@ -40,34 +62,24 @@ if (typeof customElements === "undefined") {
     Object.defineProperty(global, "customElements", {
         value: {
             define: jest.fn(),
-            whenDefined: jest.fn().mockResolvedValue(undefined),
+            whenDefined: jest.fn(async () => {}),
             get: jest.fn()
         },
         writable: true
     });
 }
 
-// Mock MessageChannel if not available
-if (typeof MessageChannel === "undefined") {
-    Object.defineProperty(global, "MessageChannel", {
-        value: class MockMessageChannel {
-            port1 = {
-                postMessage: jest.fn(),
-                onmessage: null,
-                addEventListener: jest.fn(),
-                removeEventListener: jest.fn(),
-                start: jest.fn(),
-                close: jest.fn()
-            };
-            port2 = {
-                postMessage: jest.fn(),
-                onmessage: null,
-                addEventListener: jest.fn(),
-                removeEventListener: jest.fn(),
-                start: jest.fn(),
-                close: jest.fn()
-            };
-        },
+// jsdom's Undici integration requires Node's MessagePort implementation.
+if (typeof globalThis.MessageChannel === "undefined") {
+    Object.defineProperty(globalThis, "MessageChannel", {
+        value: MessageChannel,
+        writable: true
+    });
+}
+
+if (typeof globalThis.MessagePort === "undefined") {
+    Object.defineProperty(globalThis, "MessagePort", {
+        value: MessagePort,
         writable: true
     });
 }

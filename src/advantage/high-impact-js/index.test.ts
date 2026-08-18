@@ -17,7 +17,8 @@ import {
     getSlotConfig,
     getTemplateConfig,
     getConfig,
-    initializeHighImpactJs
+    initializeHighImpactJs,
+    resetState
 } from "./index";
 import { GAMPlugin } from "./plugins/gam";
 import { XandrPlugin } from "./plugins/xandr";
@@ -46,10 +47,7 @@ describe("High Impact JS Compatibility Layer", () => {
         (window as any).highImpactJs = undefined;
 
         // Reset internal state for compatibility layer
-        const highImpactCompatibilityModule = require("./index");
-        if (highImpactCompatibilityModule.resetState) {
-            highImpactCompatibilityModule.resetState();
-        }
+        resetState();
 
         // Reset custom elements registry mock
         (window as any).customElements = {

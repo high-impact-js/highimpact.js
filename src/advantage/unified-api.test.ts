@@ -3,6 +3,7 @@
  * are available from the same import path
  */
 
+import { jest } from "@jest/globals";
 import {
     // Native Advantage API
     AdvantageMessageAction,
