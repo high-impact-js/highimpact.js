@@ -41,24 +41,24 @@ You don't have to use it if your current setup works, but it opens up new capabi
 npm uninstall @get-advantage/advantage
 
 # Install the new package
-npm install high-impact-js
+npm install highimpact.js
 ```
 
 ### 2. Update imports
 
 ```diff
 - import { Advantage } from "@get-advantage/advantage";
-+ import { Advantage } from "high-impact-js";
++ import { Advantage } from "highimpact.js";
 ```
 
 ```diff
 - import { advantageWrapAdSlotElement } from "@get-advantage/advantage/utils";
-+ import { advantageWrapAdSlotElement } from "high-impact-js/utils";
+ import { advantageWrapAdSlotElement } from "highimpact.js/utils";
 ```
 
 ```diff
 - import { AdvantageCreativeMessenger } from "@get-advantage/advantage/creative";
-+ import { AdvantageCreativeMessenger } from "high-impact-js/creative";
+ import { AdvantageCreativeMessenger } from "highimpact.js/creative";
 ```
 
 ### 3. Add one-tag banner support
@@ -66,7 +66,7 @@ npm install high-impact-js
 Add `defineSlot` calls for the relevant ad slots:
 
 ```js
-import { defineSlot } from "high-impact-js";
+import { defineSlot } from "highimpact.js";
 
 defineSlot({
     adUnitId: "/your-network/topscroll-ad",

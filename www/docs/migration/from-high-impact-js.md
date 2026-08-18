@@ -52,14 +52,19 @@ Replace the original High Impact JS script with the new library:
 
 ```diff
 - <script src="https://cdn.seenthis.se/high-impact-js/latest/high-impact-js.min.js"></script>
-+ <script src="https://cdn.example.com/high-impact-js/latest/high-impact-js.umd.js"></script>
++ <script src="https://cdn.jsdelivr.net/npm/highimpact.js/dist/bundles/advantage.umd.cjs"></script>
 ```
 
 Or install via npm:
 
 ```sh
-npm install high-impact-js
+npm install highimpact.js
 ```
+
+Or self-hosted from your own domain:
+
+Grab `dist/bundles/advantage.umd.cjs` from the [npm package](https://www.npmjs.com/package/highimpact.js) (or build it from source), upload it to your server.
+
 
 ### 2. Keep your existing configuration
 
@@ -120,7 +125,7 @@ import {
     Advantage,
     AdvantageFormatName,
     IAdvantageWrapper
-} from "@get-advantage/advantage";
+} from "highimpact.js";
 
 const advantage = Advantage.getInstance();
 

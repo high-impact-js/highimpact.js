@@ -13,7 +13,7 @@ Use it when you want to define ad behavior in JavaScript rather than (or in addi
 ## Installation
 
 ```js
-import { defineSlot, setTemplateConfig, setConfig } from "high-impact-js";
+import { defineSlot, setTemplateConfig, setConfig } from "highimpact.js";
 ```
 
 Or use the global object (available automatically when the library is loaded via a `<script>` tag):

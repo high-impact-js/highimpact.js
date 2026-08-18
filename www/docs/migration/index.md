@@ -18,16 +18,16 @@ Having two libraries solving the same problem was creating fragmentation. Publis
 
 By merging, we create **one open-source standard** for high-impact advertising that benefits everyone:
 
-- **Publishers** get a single, well-maintained library with broad ad platform support
-- **Creatives & ad tech vendors** target one implementation instead of two
-- **The ecosystem** moves toward interoperability rather than fragmentation
+-   **Publishers** get a single, well-maintained library with broad ad platform support
+-   **Creatives & ad tech vendors** target one implementation instead of two
+-   **The ecosystem** moves toward interoperability rather than fragmentation
 
 The merged library keeps the name **High Impact JS** and combines the best of both projects:
 
 | From Advantage                                           | From High Impact JS                       |
 | :------------------------------------------------------- | :---------------------------------------- |
 | Web Component architecture (`<advantage-wrapper>`)       | Declarative slot-based API (`defineSlot`) |
-| Secure messaging protocol (MessageChannel)               | Ad server plugin integrations           |
+| Secure messaging protocol (MessageChannel)               | Ad server plugin integrations             |
 | Format system (Topscroll, Midscroll, Welcome Page, etc.) | Template configuration system             |
 | UI Layer customization                                   | One-tag banner compatibility              |
 | Shadow DOM isolation                                     | Post-message signal handling              |
@@ -38,11 +38,11 @@ At the technical level, the Advantage core engine now powers everything, while t
 
 ### New Package & Repository
 
-|                 | Before                               | After                |
-| :-------------- | :----------------------------------- | :------------------- |
-| **NPM package** | `@get-advantage/advantage`           | `high-impact-js`     |
-| **Repository**  | `github.com/get-advantage/advantage` | _(new repo — TBD)_   |
-| **Website**     | `get-advantage.org`                  | _(new domain — TBD)_ |
+|                 | Before                               | After                                     |
+| :-------------- | :----------------------------------- | :---------------------------------------- |
+| **NPM package** | `@get-advantage/advantage`           | `highimpact.js`                           |
+| **Repository**  | `github.com/get-advantage/advantage` | `github.com/high-impact-js/highimpact.js` |
+| **Website**     | `get-advantage.org`                  | `gethighimpact.org`                       |
 
 ### The Two API Styles
 
