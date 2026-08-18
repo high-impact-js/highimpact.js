@@ -38,8 +38,8 @@ const baseConfig: UserConfig = {
         sourcemap: true,
         lib: {
             entry: [
-                resolve(__dirname, "src/advantage/index.ts"),
-                resolve(__dirname, "src/utils/index.ts")
+                resolve(import.meta.dirname, "src/advantage/index.ts"),
+                resolve(import.meta.dirname, "src/utils/index.ts")
             ],
             formats: ["es", "cjs"]
         },
@@ -83,7 +83,7 @@ function createBuildConfig(env: ConfigEnv): UserConfig {
         buildConfig.build = {
             ...buildConfig.build,
             lib: {
-                entry: [resolve(__dirname, entryFile)],
+                entry: [resolve(import.meta.dirname, entryFile)],
                 formats: formats,
                 fileName: `${fileNamePrefix}`,
                 name: "advantage"
