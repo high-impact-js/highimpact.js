@@ -1,11 +1,5 @@
-export { Advantage } from "./advantage";
-import { AdvantageWrapper } from "./wrapper";
-import { AdvantageUILayer } from "./ui-layer";
+export * from "./core";
 import logger from "../utils/logging";
-import { advantageWrapAdSlotElement as actualAdvantageWrapAdSlotElement } from "../utils/wrapping-helper";
-export { actualAdvantageWrapAdSlotElement as advantageWrapAdSlotElement };
-export * from "./messaging";
-export * from "../types";
 export * from "./high-impact-js";
 
 // Also import Advantage class for internal use
@@ -116,61 +110,4 @@ if (typeof window !== "undefined") {
     globalHighImpactJs.cmd = cmd;
 
     logger.debug("High Impact JS API exposed globally via window.highImpactJs");
-}
-
-// Process any queued items
-if ((window as any).advantageWrapQueue) {
-    for (let item of (window as any).advantageWrapQueue) {
-        const [target, excludedFormats] = item;
-        actualAdvantageWrapAdSlotElement(target, excludedFormats);
-    }
-}
-
-// Replace the global function with the actual function
-(window as any).advantageWrapAdSlotElement = actualAdvantageWrapAdSlotElement;
-
-// Helper to execute a queued callback safely
-const executeQueuedCallback = (callback: any) => {
-    try {
-        callback(actualAdvantageWrapAdSlotElement);
-    } catch (error) {
-        logger.error("Error executing callback:", error);
-    }
-};
-
-// Process the advantageCmdQueue - defer if DOM is not ready
-const processQueue = () => {
-    if ((window as any).advantageCmdQueue) {
-        for (const callback of (window as any).advantageCmdQueue) {
-            executeQueuedCallback(callback);
-        }
-    } else {
-        (window as any).advantageCmdQueue = [];
-    }
-
-    // Override push to execute new commands immediately
-    (window as any).advantageCmdQueue.push = function (callback: any) {
-        Array.prototype.push.call(this, callback);
-        executeQueuedCallback(callback);
-    };
-};
-
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", processQueue, { once: true });
-} else {
-    processQueue();
-}
-
-// Run new commands immediately
-(window as any).advantageCmd = function (callback: any) {
-    executeQueuedCallback(callback);
-};
-
-// Only define custom elements if they haven't been registered yet
-// This prevents errors when Advantage is already installed on the page
-if (!customElements.get("advantage-wrapper")) {
-    customElements.define("advantage-wrapper", AdvantageWrapper);
-}
-if (!customElements.get("advantage-ui-layer")) {
-    customElements.define("advantage-ui-layer", AdvantageUILayer);
 }

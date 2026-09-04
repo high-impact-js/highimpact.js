@@ -11,7 +11,12 @@ import { browserslistToTargets } from "lightningcss";
 const commonPlugins = [
     dts({
         insertTypesEntry: true,
-        exclude: ["node_modules/**", "playground/**"]
+        exclude: [
+            "node_modules/**",
+            "playground/**",
+            "src/**/*.test.ts",
+            "src/test-setup.ts"
+        ]
     }),
     tsconfigPaths()
 ];
@@ -39,6 +44,8 @@ const baseConfig: UserConfig = {
         lib: {
             entry: [
                 resolve(__dirname, "src/advantage/index.ts"),
+                resolve(__dirname, "src/advantage/core.ts"),
+                resolve(__dirname, "src/advantage/ad-servers/gam.ts"),
                 resolve(__dirname, "src/utils/index.ts")
             ],
             formats: ["es", "cjs"]
@@ -64,15 +71,29 @@ function createBuildConfig(env: ConfigEnv): UserConfig {
 
     if (isBundle) {
         const isCreative = env.mode.includes(":creative");
+        const isCore = env.mode.includes(":core");
+        const isGam = env.mode.includes(":gam");
 
         let entryFile: string;
         let fileNamePrefix: string;
         let formats: LibraryFormats[];
+        let libraryName = "advantage";
 
         if (isCreative) {
             entryFile = "src/advantage/messaging/creative-side.ts";
             fileNamePrefix = "creative-side";
             formats = ["es", "cjs", "iife"];
+        } else if (isCore) {
+            if (isGam) {
+                entryFile = "src/advantage/ad-servers/gam.ts";
+                fileNamePrefix = "advantage-core-gam";
+                libraryName = "advantageGam";
+                formats = ["es", "cjs", "umd"];
+            } else {
+                entryFile = "src/advantage/core.ts";
+                fileNamePrefix = "advantage-core";
+                formats = ["es", "cjs", "umd"];
+            }
         } else {
             entryFile = "src/advantage/index.ts";
             fileNamePrefix = "advantage";
@@ -86,7 +107,7 @@ function createBuildConfig(env: ConfigEnv): UserConfig {
                 entry: [resolve(__dirname, entryFile)],
                 formats: formats,
                 fileName: `${fileNamePrefix}`,
-                name: "advantage"
+                name: libraryName
             },
             sourcemap: true,
             minify: true,

@@ -24,6 +24,7 @@ import {
     GlobalConfig
 } from "./types";
 import logger from "../../utils/logging";
+import { registerCompatibilityLayer } from "../compatibility-registry";
 
 /**
  * Internal state object to store slot configurations
@@ -1209,6 +1210,11 @@ export const initializeHighImpactJs = async (): Promise<void> => {
 
     logger.debug("[High Impact Compatibility] Initialization complete");
 };
+
+registerCompatibilityLayer({
+    initialize: initializeHighImpactJs,
+    getConfig
+});
 
 // Set up message listener immediately when module loads (not waiting for full init)
 if (typeof window !== "undefined") {
