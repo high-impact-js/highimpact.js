@@ -48,6 +48,43 @@ Then import it where you need it:
 import { Advantage } from "highimpact.js";
 ```
 
+Publishers that only use the Advantage wrapper API can select the smaller core
+entry point. It excludes the High Impact JS Slot API and the GAM/Xandr
+compatibility adapters, while retaining the Advantage creative messaging
+protocol and opt-in support for format-agnostic creatives. This new entry point
+and its format-agnostic creative configuration are experimental while
+publishers evaluate the API:
+
+```ts
+import { Advantage } from "highimpact.js/advantage";
+```
+
+Use the default `highimpact.js` entry if the site calls `defineSlot` or uses the
+`window.highImpactJs` API. The core entry can receive one-tag creatives that
+send `AD_RENDERED` when configured with a size-to-format mapping and an
+ad-server render reporter.
+
+For GAM, import the small optional bridge and map the booked sizes to formats:
+
+```ts
+import { Advantage, AdvantageFormatName } from "highimpact.js/advantage";
+import { connectGoogleAdManager } from "highimpact.js/advantage/gam";
+
+const advantage = Advantage.getInstance();
+advantage.configure({
+    formatAgnosticCreatives: {
+        formatMappings: [
+            { format: AdvantageFormatName.TopScroll, sizes: [[1, 1]] },
+            { format: AdvantageFormatName.Midscroll, sizes: [[1, 2]] }
+        ]
+    }
+});
+connectGoogleAdManager(advantage);
+```
+
+This uses the size reported by GAM's `slotRenderEnded` event, not the rendered
+iframe dimensions.
+
 With the npm package you call the API directly on the imported `Advantage` instance — you don't need the `window.highImpactJs` command queue described below.
 
 ### Option B — Self-hosted from your own domain {#install-self-hosted}
@@ -58,6 +95,28 @@ If you'd rather not depend on a third-party CDN, serve the bundle from your own 
 <script src="https://www.your-domain.com/scripts/advantage.umd.cjs"></script>
 ```
 
+For an Advantage-only installation, use
+`dist/bundles/advantage-core.umd.cjs` instead. To support format-agnostic
+creatives with GAM, load the optional bridge after the core bundle and configure
+the globals after both scripts have loaded:
+
+```html
+<script src="https://www.your-domain.com/scripts/advantage-core.umd.cjs"></script>
+<script src="https://www.your-domain.com/scripts/advantage-core-gam.umd.cjs"></script>
+<script>
+    const advantageInstance = advantage.Advantage.getInstance();
+    advantageInstance.configure({
+        formatAgnosticCreatives: {
+            formatMappings: [
+                { format: "TOPSCROLL", sizes: [[1, 1]] },
+                { format: "MIDSCROLL", sizes: [[1, 2]] }
+            ]
+        }
+    });
+    advantageGam.connectGoogleAdManager(advantageInstance);
+</script>
+```
+
 ### Option C — jsDelivr CDN {#install-cdn}
 
 The quickest, no-build option — perfect for AdOps and low-code integrations. Add this `<script>` tag to your page:
@@ -65,6 +124,11 @@ The quickest, no-build option — perfect for AdOps and low-code integrations. A
 ```html
 <script src="https://cdn.jsdelivr.net/npm/highimpact.js/dist/bundles/advantage.umd.cjs"></script>
 ```
+
+The smaller Advantage-only CDN bundle is available at
+`dist/bundles/advantage-core.umd.cjs`. If format-agnostic creatives are
+enabled, also load `dist/bundles/advantage-core-gam.umd.cjs` after it and use
+the same global configuration shown in the self-hosted example.
 
 <div class="tip custom-block" style="padding-top: 8px">
 
@@ -74,7 +138,7 @@ The quickest, no-build option — perfect for AdOps and low-code integrations. A
 
 ### Using the command queue (script-tag methods)
 
-When you load the library with a `<script>` tag (Option B or C), use the global command queue to call the API. The command queue (`window.highImpactJs.cmd`) lets you queue API calls before the library has finished loading; queued commands run automatically once it's ready.
+When you load the full library with a `<script>` tag (Option B or C), use the global command queue to call the Slot API. The command queue (`window.highImpactJs.cmd`) lets you queue API calls before the library has finished loading; queued commands run automatically once it's ready. The lean core bundle instead exposes the `advantage` global shown above.
 
 ```html
 <script>
