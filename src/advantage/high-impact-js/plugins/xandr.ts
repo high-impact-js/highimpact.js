@@ -353,7 +353,10 @@ export class XandrPlugin implements CompatibilityPlugin {
     async getRenderedSlots(): Promise<any[]> {
         return new Promise((resolve) => {
             // In test environment, return empty array immediately
-            if (process.env.NODE_ENV === "test") {
+            if (
+                typeof process !== "undefined" &&
+                process.env?.NODE_ENV === "test"
+            ) {
                 resolve([]);
                 return;
             }

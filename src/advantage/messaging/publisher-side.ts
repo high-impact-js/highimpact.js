@@ -5,7 +5,25 @@ import {
     AdvantageMessageAction
 } from "../../types";
 import { Advantage } from "../advantage";
+import { isCompatibilityLayerRegistered } from "../compatibility-registry";
+import { reportFormatAgnosticCreativeSignal } from "../format-agnostic-creative";
 import { collectIframes, logger, ADVANTAGE } from "../../utils";
+
+const isFormatAgnosticCreativeSignal = (event: MessageEvent): boolean => {
+    let data = event.data;
+    if (typeof data === "string") {
+        try {
+            data = JSON.parse(data);
+        } catch (_) {
+            return false;
+        }
+    }
+
+    return (
+        data?.type === "high-impact-ad-responsive" ||
+        (data?.sender === "high-impact-js" && data?.action === "AD_RENDERED")
+    );
+};
 
 /**
  * AdvantageAdSlotResponder can be used by website owners/publishers if they already have their own custom implementations of high impact ad formats
@@ -193,7 +211,16 @@ export class AdvantageAdSlotResponder {
      * @internal
      */
     #listenForMessages = (event: MessageEvent) => {
-        if (this.#childAdIsAlreadyRegistered(event.source)) {
+        const isFormatAgnosticSignal =
+            this.#isWrapper &&
+            !isCompatibilityLayerRegistered() &&
+            !!Advantage.getInstance().config?.formatAgnosticCreatives &&
+            isFormatAgnosticCreativeSignal(event);
+
+        if (
+            !isFormatAgnosticSignal &&
+            this.#childAdIsAlreadyRegistered(event.source)
+        ) {
             logger.info(
                 "A message was received from a child of the component. 👍",
                 event
@@ -202,10 +229,13 @@ export class AdvantageAdSlotResponder {
             return;
         }
 
-        const validator =
-            this.#messageValidator || this.#defaultMessageValidator.bind(this);
-        if (!validator(this.#element, event)) {
-            return;
+        if (!isFormatAgnosticSignal) {
+            const validator =
+                this.#messageValidator ||
+                this.#defaultMessageValidator.bind(this);
+            if (!validator(this.#element, event)) {
+                return;
+            }
         }
 
         const childAdFinder = (iframe: HTMLIFrameElement) => {
@@ -230,6 +260,14 @@ export class AdvantageAdSlotResponder {
                         logger.info(
                             "The message is from a child of the component. 👍"
                         );
+                        if (isFormatAgnosticSignal) {
+                            reportFormatAgnosticCreativeSignal(
+                                Advantage.getInstance(),
+                                this.#element as IAdvantageWrapper,
+                                iframe
+                            );
+                            break;
+                        }
                         this.ad = {
                             iframe,
                             eventSource: event.source!,

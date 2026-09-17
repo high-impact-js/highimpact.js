@@ -33,6 +33,40 @@ export interface AdvantageConfig {
         message: MessageEvent<any>
     ) => boolean;
     enableHighImpactCompatibility?: boolean;
+    /**
+     * Enables format-agnostic High Impact JS creatives in the lean Advantage
+     * entry point.
+     *
+     * @experimental The configuration shape may change before release.
+     */
+    formatAgnosticCreatives?: AdvantageFormatAgnosticCreatives;
+}
+
+/** @experimental The format-agnostic creative API may change before release. */
+export type AdvantageAdSize = [number, number];
+
+/** @experimental The format-agnostic creative API may change before release. */
+export interface AdvantageCreativeFormatMapping {
+    format: AdvantageFormatName | string;
+    sizes: AdvantageAdSize[];
+}
+
+/**
+ * Enables format-agnostic creatives that announce themselves with the
+ * High Impact JS AD_RENDERED signal. The rendered size must be reported by an
+ * ad-server integration through Advantage.reportSlotRendered().
+ *
+ * @experimental The configuration shape may change before release.
+ */
+export interface AdvantageFormatAgnosticCreatives {
+    formatMappings: AdvantageCreativeFormatMapping[];
+}
+
+/** @experimental The format-agnostic creative API may change before release. */
+export interface AdvantageSlotRenderReport {
+    elementId: string;
+    size?: AdvantageAdSize;
+    isEmpty?: boolean;
 }
 
 /**

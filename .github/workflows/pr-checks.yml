@@ -1,0 +1,50 @@
+name: Pull request checks
+
+on:
+    pull_request:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: pr-checks-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    test-build-package:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out pull request
+              uses: actions/checkout@v6
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 22.14.0
+                  package-manager-cache: false
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Test
+              run: npm test -- --runInBand
+
+            - name: Build package
+              run: npm run build
+
+            - name: Build documentation
+              run: npm run docs:build
+
+            - name: Verify package contents
+              run: npm pack --dry-run
+
+            - name: Upload lean browser bundles for publisher testing
+              uses: actions/upload-artifact@v4
+              with:
+                  name: advantage-core-pr-${{ github.event.pull_request.number }}
+                  path: |
+                      dist/bundles/advantage-core.umd.cjs
+                      dist/bundles/advantage-core-gam.umd.cjs
+                  if-no-files-found: error
+                  retention-days: 14
