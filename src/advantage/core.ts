@@ -7,15 +7,18 @@ export { actualAdvantageWrapAdSlotElement as advantageWrapAdSlotElement };
 export * from "./messaging";
 export * from "../types";
 
-// Process any wrapping requests queued before Advantage core loaded.
-if ((window as any).advantageWrapQueue) {
-    for (const item of (window as any).advantageWrapQueue) {
-        const [target, excludedFormats] = item;
-        actualAdvantageWrapAdSlotElement(target, excludedFormats);
+if (typeof window !== "undefined") {
+    // Process any wrapping requests queued before Advantage core loaded.
+    if ((window as any).advantageWrapQueue) {
+        for (const item of (window as any).advantageWrapQueue) {
+            const [target, excludedFormats] = item;
+            actualAdvantageWrapAdSlotElement(target, excludedFormats);
+        }
     }
-}
 
-(window as any).advantageWrapAdSlotElement = actualAdvantageWrapAdSlotElement;
+    (window as any).advantageWrapAdSlotElement =
+        actualAdvantageWrapAdSlotElement;
+}
 
 const executeQueuedCallback = (callback: any) => {
     try {
