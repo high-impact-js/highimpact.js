@@ -133,10 +133,32 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/high-i
 
 ### Your First Code Contribution
 
-<!-- TODO
-include Setup of env, IDE and typical getting started instructions?
+To verify the package before opening a pull request or releasing:
 
--->
+```sh
+npm ci
+npm test -- --runInBand
+npm run build
+npm run test:package
+```
+
+`test:package` packs the current build with `npm pack`, installs the tarball in a
+temporary consumer project outside the repository, and removes it afterward.
+It does not publish anything. Run the build first so the check uses fresh output.
+
+The check covers every public package export through ESM and CommonJS, all
+standalone bundles, and TypeScript consumer examples using bundler resolution.
+Runtime checks use isolated jsdom environments with browser API stubs; they
+exercise wrapper activation/reset/close, catchable lifecycle errors, and the GAM
+adapter. Existing core-size, creative-signal mapping, and legacy compatibility
+checks also run against the installed package. These are package smoke tests,
+not visual layout or real-ad-server tests.
+
+When adding an endpoint or standalone bundle, add its expected public API to
+`scripts/test-package.cjs` and any new behavior to
+`scripts/package-tests/runtime.cjs`. Unaccounted-for exports and bundles fail the
+check. Both PR checks and the GitHub release workflow run this command; a failure
+stops the release before publishing.
 
 ### Improving The Documentation
 
