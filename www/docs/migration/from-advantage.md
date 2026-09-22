@@ -28,8 +28,8 @@ You don't have to use it if your current setup works, but it opens up new capabi
 | :------------------------- | :----------------------- | :------------------------ |
 | Define slots in HTML       | ✅                       | —                         |
 | Define slots in JavaScript | —                        | ✅                        |
-| One-tag banner support     | —                        | ✅                        |
-| GAM/Xandr auto-detection   | —                        | ✅                        |
+| One-tag banner support     | With optional mapping    | ✅                        |
+| Ad-server detection        | Small optional bridge    | Built-in GAM/Xandr plugins |
 | Template configuration     | Via `formatIntegrations` | Via `setTemplateConfig()` |
 
 ## Step-by-Step Migration
@@ -48,8 +48,15 @@ npm install highimpact.js
 
 ```diff
 - import { Advantage } from "@get-advantage/advantage";
-+ import { Advantage } from "highimpact.js";
++ import { Advantage } from "highimpact.js/advantage";
 ```
+
+The `/advantage` entry contains the wrapper API and Advantage creative
+messaging protocol without loading the High Impact JS Slot API or its full
+GAM/Xandr compatibility adapters. Import from `highimpact.js` instead if the
+installation also uses `defineSlot`. Format-agnostic `AD_RENDERED` creatives
+can be enabled on the lean entry with `formatAgnosticCreatives` and the
+optional `highimpact.js/advantage/gam` bridge.
 
 ```diff
 - import { advantageWrapAdSlotElement } from "@get-advantage/advantage/utils";
@@ -61,9 +68,10 @@ npm install highimpact.js
  import { AdvantageCreativeMessenger } from "highimpact.js/creative";
 ```
 
-### 3. Add one-tag banner support
+### 3. Add one-tag banner support (optional)
 
-Add `defineSlot` calls for the relevant ad slots:
+There are two ways to add format-agnostic creatives. If you prefer the Slot API,
+add `defineSlot` calls for the relevant ad slots:
 
 ```js
 import { defineSlot } from "highimpact.js";
@@ -77,6 +85,29 @@ defineSlot({
 ```
 
 This can coexist with your existing `<advantage-wrapper>` elements. If a slot is already wrapped, `defineSlot` will recognize it and skip the wrapping step.
+
+To keep the legacy Advantage installation lean, keep the wrappers and map the
+booked sentinel sizes instead:
+
+```ts
+import { Advantage, AdvantageFormatName } from "highimpact.js/advantage";
+import { connectGoogleAdManager } from "highimpact.js/advantage/gam";
+
+const advantage = Advantage.getInstance();
+advantage.configure({
+    formatAgnosticCreatives: {
+        formatMappings: [
+            { format: AdvantageFormatName.TopScroll, sizes: [[1, 1]] },
+            { format: AdvantageFormatName.Midscroll, sizes: [[1, 2]] }
+        ]
+    }
+});
+connectGoogleAdManager(advantage);
+```
+
+These are example mappings, not library defaults. Configure the sizes your
+publisher uses to designate each format. Detection uses the size selected by
+the ad server, not the creative iframe's `width`, `height`, or CSS dimensions.
 
 ### 4. Done
 

@@ -1,4 +1,5 @@
 import { Advantage } from "./advantage";
+import { getRegisteredCompatibilityConfig } from "./compatibility-registry";
 import {
     AdvantageFormatName,
     IAdvantageUILayer,
@@ -376,21 +377,10 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                 delete messageOptions.action;
                 delete messageOptions.format;
 
-                // Get High Impact JS global config if compatibility is enabled
-                let highImpactConfig: any = undefined;
-                try {
-                    // Dynamically import to avoid circular dependencies
-                    const highImpactModule =
-                        await import("./high-impact-js/index");
-                    highImpactConfig = highImpactModule.getConfig();
-                } catch (e) {
-                    // High Impact JS compatibility layer not available
-                }
-
                 // Merge Advantage config with High Impact JS config
                 const mergedConfig = {
                     ...Advantage.getInstance().config,
-                    ...highImpactConfig
+                    ...getRegisteredCompatibilityConfig()
                 };
 
                 // 1. First we call the format setup function with optional user defined format options
@@ -499,19 +489,10 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
 
         logger.debug("Resetting wrapper. Current format:", this.currentFormat);
 
-        // Get High Impact JS global config if compatibility is enabled
-        let highImpactConfig: any = undefined;
-        try {
-            const highImpactModule = await import("./high-impact-js/index");
-            highImpactConfig = highImpactModule.getConfig();
-        } catch (e) {
-            // High Impact JS compatibility layer not available
-        }
-
         // Merge Advantage config with High Impact JS config
         const mergedConfig = {
             ...Advantage.getInstance().config,
-            ...highImpactConfig
+            ...getRegisteredCompatibilityConfig()
         };
 
         const formatConfig = Advantage.getInstance().formats.get(
@@ -582,19 +563,10 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
             return;
         }
 
-        // Get High Impact JS global config if compatibility is enabled
-        let highImpactConfig: any = undefined;
-        try {
-            const highImpactModule = await import("./high-impact-js/index");
-            highImpactConfig = highImpactModule.getConfig();
-        } catch (e) {
-            // High Impact JS compatibility layer not available
-        }
-
         // Merge Advantage config with High Impact JS config
         const mergedConfig = {
             ...Advantage.getInstance().config,
-            ...highImpactConfig
+            ...getRegisteredCompatibilityConfig()
         };
 
         const formatConfig = Advantage.getInstance().formats.get(
@@ -674,8 +646,11 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                     typeof window !== "undefined" &&
                     window.navigator &&
                     window.navigator.userAgent.includes("jsdom");
+                const isTestEnvironment =
+                    typeof process !== "undefined" &&
+                    process.env?.NODE_ENV === "test";
 
-                if (process.env.NODE_ENV === "test" && isJSDOM) {
+                if (isTestEnvironment && isJSDOM) {
                     // In JSDOM test environment, replace problematic data URLs
                     const processedCSS = CSS.replace(
                         /url\("data:image\/[^"]+"\)/g,
@@ -690,7 +665,10 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
             // If CSS insertion fails, log the error but don't break the format setup
             logger.debug("Failed to insert CSS:", error);
             // In test environments, this is often due to JSDOM limitations, so we can continue
-            if (process.env.NODE_ENV !== "test") {
+            const isTestEnvironment =
+                typeof process !== "undefined" &&
+                process.env?.NODE_ENV === "test";
+            if (!isTestEnvironment) {
                 throw error;
             }
         }

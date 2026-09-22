@@ -68,8 +68,11 @@ export class AdvantageUILayer extends HTMLElement {
                     typeof window !== "undefined" &&
                     window.navigator &&
                     window.navigator.userAgent.includes("jsdom");
+                const isTestEnvironment =
+                    typeof process !== "undefined" &&
+                    process.env?.NODE_ENV === "test";
 
-                if (process.env.NODE_ENV === "test" && isJSDOM) {
+                if (isTestEnvironment && isJSDOM) {
                     // In JSDOM test environment, replace problematic data URLs
                     const processedCSS = CSS.replace(
                         /url\("data:image\/[^"]+"\)/g,
@@ -84,7 +87,10 @@ export class AdvantageUILayer extends HTMLElement {
             // If CSS insertion fails, log the error but don't break the format setup
             logger.debug("Failed to insert CSS in UI layer:", error);
             // In test environments, this is often due to JSDOM limitations, so we can continue
-            if (process.env.NODE_ENV !== "test") {
+            const isTestEnvironment =
+                typeof process !== "undefined" &&
+                process.env?.NODE_ENV === "test";
+            if (!isTestEnvironment) {
                 throw error;
             }
         }

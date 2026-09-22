@@ -4,10 +4,12 @@ import type {
     AdvantageConfig,
     IAdvantageWrapper,
     AdvantageFormat,
-    AdvantageFormatIntegration
+    AdvantageFormatIntegration,
+    AdvantageSlotRenderReport
 } from "../types";
 import { defaultFormats } from "./formats";
-import { initializeHighImpactJs } from "./high-impact-js";
+import { initializeRegisteredCompatibilityLayer } from "./compatibility-registry";
+import { reportSlotRendered } from "./format-agnostic-creative";
 
 /**
  * The main class for the Advantage library. This class is a singleton and is used to configure the library, register wrappers, and register custom elements.
@@ -61,6 +63,17 @@ export class Advantage {
         logger.info("Custom wrapper registered", wrapper);
     }
 
+    /**
+     * Reports the size selected by an ad server for a wrapped slot. This is
+     * paired with a format-agnostic creative's AD_RENDERED signal before a
+     * format is activated.
+     *
+     * @experimental The format-agnostic creative API may change before release.
+     */
+    public reportSlotRendered(report: AdvantageSlotRenderReport): boolean {
+        return reportSlotRendered(this, report);
+    }
+
     // Public method to get a reference to the singleton instance of the library.
     public static getInstance(): Advantage {
         if (!Advantage.instance) {
@@ -104,7 +117,14 @@ export class Advantage {
         // Initialize High Impact JS compatibility layer if requested
         if (config.enableHighImpactCompatibility) {
             logger.info("Initializing High Impact JS compatibility layer");
-            initializeHighImpactJs().catch((error) => {
+            const initialization = initializeRegisteredCompatibilityLayer();
+            if (!initialization) {
+                logger.error(
+                    "High Impact JS compatibility was enabled, but the compatibility entry point has not been loaded"
+                );
+                return;
+            }
+            initialization.catch((error) => {
                 logger.error(
                     "Failed to initialize High Impact JS compatibility:",
                     error
