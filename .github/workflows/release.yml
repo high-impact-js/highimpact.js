@@ -46,6 +46,9 @@ jobs:
             - name: Build package
               run: npm run build
 
+            - name: Test installed npm package
+              run: npm run test:package
+
             # Release-It is configured to push to the `highimpact` remote.
             # checkout creates `origin`, so create the matching remote using
             # the persisted GitHub Actions credentials.

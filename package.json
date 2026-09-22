@@ -17,7 +17,7 @@
     ],
     "main": "./dist/advantage/index.cjs",
     "module": "./dist/advantage/index.js",
-    "types": "./dist/index.d.ts",
+    "types": "./dist/advantage/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/advantage/index.js",
@@ -75,6 +75,7 @@
         "docs:build": "typedoc && vitepress build",
         "docs:preview": "vitepress preview",
         "test": "jest",
+        "test:package": "node scripts/test-package.cjs",
         "test-server": "node test-server.js",
         "release": "dotenv release-it --",
         "release:next": "dotenv release-it -- --preRelease=next",

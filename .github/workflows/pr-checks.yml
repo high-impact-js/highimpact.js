@@ -37,7 +37,7 @@ jobs:
               run: npm run docs:build
 
             - name: Verify package contents
-              run: npm pack --dry-run
+              run: npm run test:package
 
             - name: Upload lean browser bundles for publisher testing
               uses: actions/upload-artifact@v4

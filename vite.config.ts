@@ -46,6 +46,8 @@ const baseConfig: UserConfig = {
                 resolve(__dirname, "src/advantage/index.ts"),
                 resolve(__dirname, "src/advantage/core.ts"),
                 resolve(__dirname, "src/advantage/ad-servers/gam.ts"),
+                resolve(__dirname, "src/advantage/messaging/index.ts"),
+                resolve(__dirname, "src/advantage/messaging/creative-side.ts"),
                 resolve(__dirname, "src/utils/index.ts")
             ],
             formats: ["es", "cjs"]
