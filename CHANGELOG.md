@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.12.0...hijs-v0.13.0) (2026-09-22)
+
+
+### Bug Fixes
+
+* correct async wrapper lifecycle return types ([7f6773a](https://github.com/high-impact-js/highimpact.js/commit/7f6773af5791ba19d6be4f5765ea305e4c620ae9)), closes [#1](https://github.com/high-impact-js/highimpact.js/issues/1)
+
+
+### Features
+
+* add lean Advantage entry ([353a9d5](https://github.com/high-impact-js/highimpact.js/commit/353a9d5979a1582bcd07599d2195b38904f722c0))
+
 # 0.12.0 (2026-08-17)
 
 
