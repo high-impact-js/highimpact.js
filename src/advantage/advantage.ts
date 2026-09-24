@@ -1,4 +1,5 @@
 import { logger } from "../utils";
+import { validateConfig } from "./config-validation";
 
 import type {
     AdvantageConfig,
@@ -46,7 +47,11 @@ export class Advantage {
         const revision = ++this.configurationRevision;
         const merge = options.merge !== false;
         if (config.configUrlResolver) {
-            this.loadConfig(config.configUrlResolver(), merge, revision);
+            try {
+                this.loadConfig(config.configUrlResolver(), merge, revision);
+            } catch (error) {
+                logger.error("Error fetching config", error);
+            }
         } else {
             this.applyConfig(config, merge);
         }
@@ -100,9 +105,6 @@ export class Advantage {
             .then((module) => {
                 if (revision !== this.configurationRevision) return;
                 const config = module.default;
-                if (!config || typeof config !== "object" || Array.isArray(config)) {
-                    throw new TypeError("Remote configuration must default-export a config object");
-                }
                 this.applyConfig(config, merge);
             })
             .catch((e) => {
@@ -112,16 +114,26 @@ export class Advantage {
 
     // Private method to apply the configuration to the library.
     private applyConfig(config: AdvantageConfig, merge: boolean) {
-        this.config = merge ? { ...this.config, ...config } : { ...config };
-        this.mergeUniqueFormats(this.defaultFormats, this.config.formats ?? []);
-        logger.info("Format configurations applied ✅", this.formats);
-        this.formatIntegrations = new Map(
-            (this.config.formatIntegrations ?? []).map((integration) => [
-                integration.format,
-                integration
+        validateConfig(config);
+        const nextConfig = merge ? { ...this.config, ...config } : { ...config };
+        validateConfig(nextConfig);
+        // Build all derived state before committing any of it. A failed update
+        // must leave the config and both maps pointing to the previous state.
+        const formats = new Map(
+            [...this.defaultFormats, ...(nextConfig.formats ?? [])].map((format) => [
+                format.name, format
             ])
         );
-        logger.info("Format integrations applied ✅", this.formatIntegrations);
+        const integrations = new Map(
+            (nextConfig.formatIntegrations ?? []).map((integration) => [
+                integration.format, integration
+            ])
+        );
+        this.config = nextConfig;
+        this.formats = formats;
+        this.formatIntegrations = integrations;
+        logger.info("Format configurations applied ✅", formats);
+        logger.info("Format integrations applied ✅", integrations);
 
         // Initialize High Impact JS compatibility layer if requested
         if (config.enableHighImpactCompatibility) {
@@ -140,19 +152,5 @@ export class Advantage {
                 );
             });
         }
-    }
-
-    // Private helper method to merge the default formats with the user provided formats.
-    private mergeUniqueFormats(
-        localFormats: AdvantageFormat[],
-        userFormats: AdvantageFormat[]
-    ): AdvantageFormat[] {
-        const mergedArray = [...localFormats, ...userFormats];
-        const formatsMap = new Map<string, AdvantageFormat>();
-        for (const item of mergedArray) {
-            formatsMap.set(item.name, item);
-        }
-        this.formats = formatsMap;
-        return Array.from(formatsMap.values());
     }
 }

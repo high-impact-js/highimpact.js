@@ -2,6 +2,9 @@ import { Advantage } from "./advantage";
 import { getRegisteredCompatibilityConfig } from "./compatibility-registry";
 import {
     AdvantageFormatName,
+    AdvantageFormat,
+    AdvantageFormatIntegration,
+    MergedIntegrationConfig,
     IAdvantageUILayer,
     IAdvantageWrapper,
     AdvantageMessage,
@@ -33,6 +36,11 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
     #slotChangeRegistered = false;
     #trackedIframes = new WeakSet<HTMLIFrameElement>();
     #activeFormatIframe: HTMLIFrameElement | null = null;
+    #activeLifecycle?: {
+        format: AdvantageFormat;
+        integration?: AdvantageFormatIntegration;
+        config: MergedIntegrationConfig;
+    };
     #mutationObserver: MutationObserver | null = null;
     #slotChangeHandler: (() => void) | null = null;
     #disconnectTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -383,6 +391,14 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                     ...getRegisteredCompatibilityConfig()
                 };
 
+                // Keep the definitions used for this activation even if the
+                // publisher replaces or removes them while the ad is active.
+                this.#activeLifecycle = {
+                    format: formatConfig,
+                    integration,
+                    config: mergedConfig
+                };
+
                 // 1. First we call the format setup function with optional user defined format options
                 await formatConfig.setup(this, this.messageHandler.ad?.iframe, {
                     ...integration?.options,
@@ -490,20 +506,19 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
         logger.debug("Resetting wrapper. Current format:", this.currentFormat);
 
         // Merge Advantage config with High Impact JS config
-        const mergedConfig = {
+        const mergedConfig = this.#activeLifecycle?.config ?? {
             ...Advantage.getInstance().config,
             ...getRegisteredCompatibilityConfig()
         };
 
-        const formatConfig = Advantage.getInstance().formats.get(
-            this.currentFormat
-        );
+        const formatConfig = this.#activeLifecycle?.format ??
+            Advantage.getInstance().formats.get(this.currentFormat);
         if (formatConfig) {
             formatConfig.reset(this, this.messageHandler?.ad?.iframe);
         }
-        const integration = Advantage.getInstance().formatIntegrations.get(
-            this.currentFormat
-        );
+        const integration = this.#activeLifecycle
+            ? this.#activeLifecycle.integration
+            : Advantage.getInstance().formatIntegrations.get(this.currentFormat);
         if (integration) {
             if (typeof integration.reset === "function") {
                 integration.reset(
@@ -519,6 +534,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
 
         const previousFormat = this.currentFormat;
         this.currentFormat = "";
+        this.#activeLifecycle = undefined;
         this.#updateCurrentFormatAttribute();
 
         // Always clear injected styles, even if the format's reset forgot to
@@ -564,14 +580,13 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
         }
 
         // Merge Advantage config with High Impact JS config
-        const mergedConfig = {
+        const mergedConfig = this.#activeLifecycle?.config ?? {
             ...Advantage.getInstance().config,
             ...getRegisteredCompatibilityConfig()
         };
 
-        const formatConfig = Advantage.getInstance().formats.get(
-            this.currentFormat
-        );
+        const formatConfig = this.#activeLifecycle?.format ??
+            Advantage.getInstance().formats.get(this.currentFormat);
         logger.info(
             "Advantage.getInstance().formats",
             Advantage.getInstance().formats
@@ -584,9 +599,9 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                 ? formatConfig.close(this, this.messageHandler?.ad?.iframe)
                 : undefined;
         }
-        const integration = Advantage.getInstance().formatIntegrations.get(
-            this.currentFormat
-        );
+        const integration = this.#activeLifecycle
+            ? this.#activeLifecycle.integration
+            : Advantage.getInstance().formatIntegrations.get(this.currentFormat);
         if (integration) {
             if (typeof integration.close === "function") {
                 integration.close(
@@ -600,6 +615,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
         }
         const previousFormat = this.currentFormat;
         this.currentFormat = "";
+        this.#activeLifecycle = undefined;
         this.#updateCurrentFormatAttribute();
 
         this.#dispatchLifecycleEvent(

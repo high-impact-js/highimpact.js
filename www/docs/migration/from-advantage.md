@@ -165,8 +165,10 @@ replaced, custom formats could disappear when omitted, and integration entries
 accumulated. Callers that need replacement should opt into `{ merge: false }`.
 Callers building integration lists over multiple calls must now pass the full
 intended list. Configuration updates do not reset existing wrappers or tear down
-already initialized compatibility plugins. Compatibility initialization is
-requested only when the incoming config explicitly sets
+already initialized compatibility plugins. Active wrappers retain the format and
+integration cleanup hooks, and the merged configuration passed to setup, until
+reset or close. New activations use the latest configuration. Compatibility
+initialization is requested only when the incoming config explicitly sets
 `enableHighImpactCompatibility: true`; unrelated updates do not request it again.
 
 ### Remote configuration
@@ -183,9 +185,11 @@ advantage.configure({ configUrlResolver: () => "/publisher-config.js" });
 
 A newer `configure()` call supersedes any pending remote result, even when the
 newer call only updates an unrelated setting. Between concurrent remote loads,
-only the most recently requested result may apply. Failed loads or modules
-without a valid default config object are logged and leave the active
-configuration intact. Replacement mode also waits for a valid result before
-replacing settings. `configure()` remains synchronous and returns `void`; when
+only the most recently requested result may apply. Resolver exceptions, failed
+loads, or modules without a valid plain default config object are logged and leave the active
+configuration intact. Known configuration fields and lifecycle hooks are validated
+before configuration or derived maps are replaced. Invalid local updates throw
+synchronously and also leave the previous state intact. Replacement mode also
+waits for a valid result before replacing settings. `configure()` remains synchronous and returns `void`; when
 using remote loading, combine the intended settings in the exported config
 instead of following the load request with an immediate local update.

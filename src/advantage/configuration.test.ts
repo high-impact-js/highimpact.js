@@ -17,6 +17,12 @@ jest.mock("./newer-config", () => ({
 jest.mock("./invalid-config", () => ({ __esModule: true }), { virtual: true });
 jest.mock("./failed-config", () => { throw new Error("network failure"); }, { virtual: true });
 
+let mockRemoteValue: unknown;
+jest.mock("./shape-config", () => ({
+    __esModule: true,
+    get default() { return mockRemoteValue; }
+}), { virtual: true });
+
 const format = (name: string): AdvantageFormat => ({
     name, description: name, setup: async () => {}, reset: () => {}, close: () => {}
 });
@@ -153,4 +159,40 @@ describe("Advantage configuration updates", () => {
         expect(advantage.config).toEqual({ formatAgnosticCreatives: mappings });
         expect(logger.error).toHaveBeenCalled();
     });
+    it("logs synchronous resolver failures without changing active state", () => {
+        advantage.configure({ formatAgnosticCreatives: mappings });
+        const previous = advantage.config;
+        expect(() => advantage.configure({
+            configUrlResolver: () => { throw new Error("resolver failed"); }
+        }, { merge: false })).not.toThrow();
+        expect(advantage.config).toBe(previous);
+        expect(logger.error).toHaveBeenCalledWith("Error fetching config", expect.any(Error));
+    });
+
+    it.each([
+        ["promise", Promise.resolve({})],
+        ["date", new Date()],
+        ["non-array formats", { formats: {} }],
+        ["null format", { formats: [null] }],
+        ["missing format hooks", { formats: [{ name: "BAD" }] }],
+        ["non-array integrations", { formatIntegrations: {} }],
+        ["invalid integration hook", { formatIntegrations: [{ format: "BAD", setup: true }] }],
+        ["invalid mapping", { formatAgnosticCreatives: { formatMappings: [{ format: "BAD" }] } }],
+        ["invalid size", { formatAgnosticCreatives: { formatMappings: [{ format: "BAD", sizes: [[1, "2"]] }] } }]
+    ])("rejects a remote %s atomically", async (_name, value) => {
+        advantage.configure({
+            formats: [format("CUSTOM")],
+            formatIntegrations: [{ format: "CUSTOM", setup: async () => {} }],
+            formatAgnosticCreatives: mappings
+        });
+        const previous = [advantage.config, advantage.formats, advantage.formatIntegrations];
+        mockRemoteValue = value;
+        advantage.configure({ configUrlResolver: () => "./shape-config" }, { merge: false });
+        await flushLoad();
+        expect(advantage.config).toBe(previous[0]);
+        expect(advantage.formats).toBe(previous[1]);
+        expect(advantage.formatIntegrations).toBe(previous[2]);
+        expect(logger.error).toHaveBeenCalled();
+    });
+
 });
