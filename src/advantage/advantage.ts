@@ -1,7 +1,9 @@
 import { logger } from "../utils";
+import { validateConfig } from "./config-validation";
 
 import type {
     AdvantageConfig,
+    AdvantageConfigureOptions,
     IAdvantageWrapper,
     AdvantageFormat,
     AdvantageFormatIntegration,
@@ -24,21 +26,34 @@ export class Advantage {
     formats: Map<string, AdvantageFormat> = new Map();
     formatIntegrations: Map<string, AdvantageFormatIntegration> = new Map();
     public static id = 0;
+    private configurationRevision = 0;
 
     private constructor() {
         Advantage.id++;
         logger.info("Advantage constructor", Advantage.id);
     }
-    // Entry point for the library. This is where the configuration is loaded and the library is initialized.
-    public configure(config: AdvantageConfig) {
+    /**
+     * Shallow-merge supplied top-level settings. Omitted keys survive; arrays
+     * and nested objects are replaced. Explicit undefined clears a setting.
+     * Use { merge: false } to replace the configuration entirely.
+     *
+     * A resolver loads a default-exported config instead of applying local
+     * settings. Any newer configure call supersedes that pending load.
+     */
+    public configure(
+        config: AdvantageConfig,
+        options: AdvantageConfigureOptions = {}
+    ): void {
+        const revision = ++this.configurationRevision;
+        const merge = options.merge !== false;
         if (config.configUrlResolver) {
-            logger.info("Config URL resolver provided");
-            this.loadConfig(config.configUrlResolver());
+            try {
+                this.loadConfig(config.configUrlResolver(), merge, revision);
+            } catch (error) {
+                logger.error("Error fetching config", error);
+            }
         } else {
-            logger.info(
-                "No config URL resolver provided, using provided config"
-            );
-            this.applyConfig(config);
+            this.applyConfig(config, merge);
         }
     }
 
@@ -84,11 +99,13 @@ export class Advantage {
     }
 
     // Private method to load the configuration from a remote file.
-    private loadConfig(configUrl: string) {
+    private loadConfig(configUrl: string, merge: boolean, revision: number) {
         logger.info(`⬇ Loading config from remote URL: ${configUrl}`);
         import(/* @vite-ignore */ configUrl)
             .then((module) => {
-                this.applyConfig(module.default);
+                if (revision !== this.configurationRevision) return;
+                const config = module.default;
+                this.applyConfig(config, merge);
             })
             .catch((e) => {
                 logger.error("Error fetching config", e);
@@ -96,23 +113,27 @@ export class Advantage {
     }
 
     // Private method to apply the configuration to the library.
-    private applyConfig(config: AdvantageConfig) {
-        this.config = config;
-        if (config.formats) {
-            this.mergeUniqueFormats(this.defaultFormats, config.formats);
-        } else {
-            this.formats = new Map(defaultFormats.map((f) => [f.name, f]));
-        }
-        logger.info("Format configurations applied ✅", this.formats);
-        if (config.formatIntegrations) {
-            for (const integration of config.formatIntegrations) {
-                this.formatIntegrations.set(integration.format, integration);
-            }
-            logger.info(
-                "Format integrations applied ✅",
-                this.formatIntegrations
-            );
-        }
+    private applyConfig(config: AdvantageConfig, merge: boolean) {
+        validateConfig(config);
+        const nextConfig = merge ? { ...this.config, ...config } : { ...config };
+        validateConfig(nextConfig);
+        // Build all derived state before committing any of it. A failed update
+        // must leave the config and both maps pointing to the previous state.
+        const formats = new Map(
+            [...this.defaultFormats, ...(nextConfig.formats ?? [])].map((format) => [
+                format.name, format
+            ])
+        );
+        const integrations = new Map(
+            (nextConfig.formatIntegrations ?? []).map((integration) => [
+                integration.format, integration
+            ])
+        );
+        this.config = nextConfig;
+        this.formats = formats;
+        this.formatIntegrations = integrations;
+        logger.info("Format configurations applied ✅", formats);
+        logger.info("Format integrations applied ✅", integrations);
 
         // Initialize High Impact JS compatibility layer if requested
         if (config.enableHighImpactCompatibility) {
@@ -131,19 +152,5 @@ export class Advantage {
                 );
             });
         }
-    }
-
-    // Private helper method to merge the default formats with the user provided formats.
-    private mergeUniqueFormats(
-        localFormats: AdvantageFormat[],
-        userFormats: AdvantageFormat[]
-    ): AdvantageFormat[] {
-        const mergedArray = [...localFormats, ...userFormats];
-        const formatsMap = new Map<string, AdvantageFormat>();
-        for (const item of mergedArray) {
-            formatsMap.set(item.name, item);
-        }
-        this.formats = formatsMap;
-        return Array.from(formatsMap.values());
     }
 }
