@@ -10,6 +10,8 @@ import { browserslistToTargets } from "lightningcss";
 // Common plugins used in multiple configurations
 const commonPlugins = [
     dts({
+        // Importing the package version must not move declarations under dist/src.
+        entryRoot: "src",
         insertTypesEntry: true,
         exclude: [
             "node_modules/**",
@@ -111,6 +113,9 @@ function createBuildConfig(env: ConfigEnv): UserConfig {
                 fileName: `${fileNamePrefix}`,
                 name: libraryName
             },
+            // Preserve the existing browser namespace if a later bundle rejects
+            // an incompatible runtime, or adds the full API after lean core.
+            rollupOptions: { output: { extend: !isCreative && !isGam } },
             sourcemap: true,
             minify: true,
             cssMinify: "lightningcss",

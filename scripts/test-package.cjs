@@ -95,7 +95,7 @@ Advantage.getInstance().wrappers[0].close().catch(console.error);
 `);
     run(process.execPath, [require.resolve("typescript/bin/tsc"), "--noEmit", "--strict", "--skipLibCheck", "false", "--target", "ES2020", "--module", "ESNext", "--moduleResolution", "bundler", "consumer.ts"]);
     console.log("✓ TypeScript consumer (all endpoints and async lifecycle methods)");
-    for (const script of ["verify-core-bundle.cjs", "verify-format-agnostic-core.cjs", "verify-legacy-creative.cjs"]) {
+    for (const script of ["verify-core-bundle.cjs", "verify-format-agnostic-core.cjs", "verify-legacy-creative.cjs", "verify-shared-runtime.cjs"]) {
         console.log(run(process.execPath, [path.join(__dirname, script)], installed).trim());
     }
     console.log("Package smoke tests passed (installed npm tarball).");

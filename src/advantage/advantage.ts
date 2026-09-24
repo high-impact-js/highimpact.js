@@ -1,4 +1,5 @@
 import { logger } from "../utils";
+import { getSharedState } from "./runtime";
 
 import type {
     AdvantageConfig,
@@ -16,7 +17,6 @@ import { reportSlotRendered } from "./format-agnostic-creative";
  * @public
  */
 export class Advantage {
-    private static instance: Advantage | null = null;
     config: AdvantageConfig | null = null;
     defaultFormats: AdvantageFormat[] = defaultFormats;
     wrappers: IAdvantageWrapper[] = [];
@@ -76,11 +76,7 @@ export class Advantage {
 
     // Public method to get a reference to the singleton instance of the library.
     public static getInstance(): Advantage {
-        if (!Advantage.instance) {
-            logger.info("Creating a new instance of Advantage");
-            Advantage.instance = new Advantage();
-        }
-        return Advantage.instance;
+        return getSharedState("advantage", () => new Advantage());
     }
 
     // Private method to load the configuration from a remote file.
