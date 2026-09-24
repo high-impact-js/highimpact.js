@@ -92,8 +92,16 @@ reset.catch(console.error);
 close.catch(console.error);
 Advantage.getInstance().wrappers[0].reset().catch(console.error);
 Advantage.getInstance().wrappers[0].close().catch(console.error);
+import type { AdvantageConfigureOptions } from "highimpact.js/types";
+const replace: AdvantageConfigureOptions = { merge: false };
+Advantage.getInstance().configure({}, replace);
+Advantage.getInstance().configure({
+    formats: undefined, formatIntegrations: undefined,
+    formatAgnosticCreatives: undefined, messageValidator: undefined,
+    configUrlResolver: undefined, enableHighImpactCompatibility: undefined
+});
 `);
-    run(process.execPath, [require.resolve("typescript/bin/tsc"), "--noEmit", "--strict", "--skipLibCheck", "false", "--target", "ES2020", "--module", "ESNext", "--moduleResolution", "bundler", "consumer.ts"]);
+    run(process.execPath, [require.resolve("typescript/bin/tsc"), "--noEmit", "--strict", "--exactOptionalPropertyTypes", "--skipLibCheck", "false", "--target", "ES2020", "--module", "ESNext", "--moduleResolution", "bundler", "consumer.ts"]);
     console.log("✓ TypeScript consumer (all endpoints and async lifecycle methods)");
     for (const script of ["verify-core-bundle.cjs", "verify-format-agnostic-core.cjs", "verify-legacy-creative.cjs"]) {
         console.log(run(process.execPath, [path.join(__dirname, script)], installed).trim());

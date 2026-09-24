@@ -2,6 +2,7 @@ import { logger } from "../utils";
 
 import type {
     AdvantageConfig,
+    AdvantageConfigureOptions,
     IAdvantageWrapper,
     AdvantageFormat,
     AdvantageFormatIntegration,
@@ -24,21 +25,30 @@ export class Advantage {
     formats: Map<string, AdvantageFormat> = new Map();
     formatIntegrations: Map<string, AdvantageFormatIntegration> = new Map();
     public static id = 0;
+    private configurationRevision = 0;
 
     private constructor() {
         Advantage.id++;
         logger.info("Advantage constructor", Advantage.id);
     }
-    // Entry point for the library. This is where the configuration is loaded and the library is initialized.
-    public configure(config: AdvantageConfig) {
+    /**
+     * Shallow-merge supplied top-level settings. Omitted keys survive; arrays
+     * and nested objects are replaced. Explicit undefined clears a setting.
+     * Use { merge: false } to replace the configuration entirely.
+     *
+     * A resolver loads a default-exported config instead of applying local
+     * settings. Any newer configure call supersedes that pending load.
+     */
+    public configure(
+        config: AdvantageConfig,
+        options: AdvantageConfigureOptions = {}
+    ): void {
+        const revision = ++this.configurationRevision;
+        const merge = options.merge !== false;
         if (config.configUrlResolver) {
-            logger.info("Config URL resolver provided");
-            this.loadConfig(config.configUrlResolver());
+            this.loadConfig(config.configUrlResolver(), merge, revision);
         } else {
-            logger.info(
-                "No config URL resolver provided, using provided config"
-            );
-            this.applyConfig(config);
+            this.applyConfig(config, merge);
         }
     }
 
@@ -84,11 +94,16 @@ export class Advantage {
     }
 
     // Private method to load the configuration from a remote file.
-    private loadConfig(configUrl: string) {
+    private loadConfig(configUrl: string, merge: boolean, revision: number) {
         logger.info(`⬇ Loading config from remote URL: ${configUrl}`);
         import(/* @vite-ignore */ configUrl)
             .then((module) => {
-                this.applyConfig(module.default);
+                if (revision !== this.configurationRevision) return;
+                const config = module.default;
+                if (!config || typeof config !== "object" || Array.isArray(config)) {
+                    throw new TypeError("Remote configuration must default-export a config object");
+                }
+                this.applyConfig(config, merge);
             })
             .catch((e) => {
                 logger.error("Error fetching config", e);
@@ -96,23 +111,17 @@ export class Advantage {
     }
 
     // Private method to apply the configuration to the library.
-    private applyConfig(config: AdvantageConfig) {
-        this.config = config;
-        if (config.formats) {
-            this.mergeUniqueFormats(this.defaultFormats, config.formats);
-        } else {
-            this.formats = new Map(defaultFormats.map((f) => [f.name, f]));
-        }
+    private applyConfig(config: AdvantageConfig, merge: boolean) {
+        this.config = merge ? { ...this.config, ...config } : { ...config };
+        this.mergeUniqueFormats(this.defaultFormats, this.config.formats ?? []);
         logger.info("Format configurations applied ✅", this.formats);
-        if (config.formatIntegrations) {
-            for (const integration of config.formatIntegrations) {
-                this.formatIntegrations.set(integration.format, integration);
-            }
-            logger.info(
-                "Format integrations applied ✅",
-                this.formatIntegrations
-            );
-        }
+        this.formatIntegrations = new Map(
+            (this.config.formatIntegrations ?? []).map((integration) => [
+                integration.format,
+                integration
+            ])
+        );
+        logger.info("Format integrations applied ✅", this.formatIntegrations);
 
         // Initialize High Impact JS compatibility layer if requested
         if (config.enableHighImpactCompatibility) {

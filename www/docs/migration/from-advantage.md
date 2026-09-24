@@ -126,3 +126,66 @@ No. The `AdvantageCreativeMessenger` works exactly as before. Just update the im
 ### What about `formatIntegrations` in my Advantage config?
 
 They continue to work. The Slot API's `setTemplateConfig` serves a similar purpose but with a different API shape. You can use either or both — they don't conflict.
+
+## Incremental configuration
+
+`Advantage.configure()` now shallow-merges top-level settings. An omitted key
+retains its previous value. A supplied array or nested object replaces the whole
+previous value; entries are not concatenated or deeply merged.
+
+```ts
+const advantage = Advantage.getInstance();
+advantage.configure({ formatIntegrations: siteIntegrations });
+advantage.configure({
+    formatAgnosticCreatives: {
+        formatMappings: [{ format: "TOPSCROLL", sizes: [[970, 250]] }]
+    }
+});
+// Both the integrations and creative mappings are now configured.
+```
+
+Providing `formats` replaces the previous custom formats; built-in defaults
+remain available and custom entries override defaults by name. Providing
+`formatIntegrations` replaces the previous integrations, removing omitted entries.
+If the same name occurs more than once in a supplied array, the last entry wins.
+`formats: []` restores the instance's default formats; `formatIntegrations: []`
+removes all integration overrides.
+
+To clear a single setting, supply `undefined`. To replace all settings, pass
+`{ merge: false }`:
+
+```ts
+advantage.configure({ formatAgnosticCreatives: undefined });
+advantage.configure(nextConfig, { merge: false });
+advantage.configure({}, { merge: false }); // Restore configuration defaults.
+```
+
+This changes repeated-call behavior from 0.13.0: previously the config object was
+replaced, custom formats could disappear when omitted, and integration entries
+accumulated. Callers that need replacement should opt into `{ merge: false }`.
+Callers building integration lists over multiple calls must now pass the full
+intended list. Configuration updates do not reset existing wrappers or tear down
+already initialized compatibility plugins. Compatibility initialization is
+requested only when the incoming config explicitly sets
+`enableHighImpactCompatibility: true`; unrelated updates do not request it again.
+
+### Remote configuration
+
+A `configUrlResolver` supplied in a call loads a module that must default-export a
+configuration object. As before, local settings alongside that resolver are not
+applied. The loaded object follows the same merge/replacement option as that
+call; an inherited resolver is never invoked by an unrelated update.
+
+```ts
+advantage.configure({ configUrlResolver: () => "/publisher-config.js" });
+// /publisher-config.js: export default { formatIntegrations: [...] };
+```
+
+A newer `configure()` call supersedes any pending remote result, even when the
+newer call only updates an unrelated setting. Between concurrent remote loads,
+only the most recently requested result may apply. Failed loads or modules
+without a valid default config object are logged and leave the active
+configuration intact. Replacement mode also waits for a valid result before
+replacing settings. `configure()` remains synchronous and returns `void`; when
+using remote loading, combine the intended settings in the exported config
+instead of following the load request with an immediate local update.
