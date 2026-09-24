@@ -17,12 +17,18 @@ import {
     initializeHighImpactJs
 } from "./high-impact-js";
 
+import { getSharedState } from "./runtime";
+
 // Create auto-initializing wrappers for the High Impact JS API
-let autoInitialized = false;
+
+const installation = getSharedState("full-installation", () => ({
+    autoInitialized: false,
+    installed: false
+}));
 
 const ensureAutoInit = (): void => {
-    if (!autoInitialized) {
-        autoInitialized = true;
+    if (!installation.autoInitialized) {
+        installation.autoInitialized = true;
         logger.debug(
             "Auto-initializing Advantage with High Impact JS compatibility"
         );
@@ -81,25 +87,22 @@ export {
     initializeHighImpactJs
 };
 
-// Auto-initialize High Impact JS compatibility if window.highImpactJs is detected
-if (typeof window !== "undefined" && (window as any).highImpactJs) {
-    logger.debug(
-        "Detected window.highImpactJs - auto-initializing High Impact JS compatibility"
-    );
-    initializeHighImpactJs().catch((error) => {
-        logger.error(
-            "Failed to auto-initialize High Impact JS compatibility:",
-            error
+if (typeof window !== "undefined" && !installation.installed) {
+    installation.installed = true;
+    // Auto-initialize compatibility when a publisher has queued commands.
+    if ((window as any).highImpactJs) {
+        logger.debug(
+            "Detected window.highImpactJs - auto-initializing High Impact JS compatibility"
         );
-    });
-}
+        initializeHighImpactJs().catch((error) => {
+            logger.error(
+                "Failed to auto-initialize High Impact JS compatibility:",
+                error
+            );
+        });
+    }
 
-// Also expose High Impact JS API globally for maximum compatibility
-if (typeof window !== "undefined") {
-    // Set up the global highImpactJs object if it doesn't exist
     (window as any).highImpactJs = (window as any).highImpactJs || { cmd: [] };
-
-    // Expose the auto-initializing API functions globally
     const globalHighImpactJs = (window as any).highImpactJs;
     globalHighImpactJs.defineSlot = defineSlot;
     globalHighImpactJs.setConfig = setConfig;

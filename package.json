@@ -62,11 +62,12 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build --mode production && npm run bundle && npm run bundle:core && npm run bundle:core:gam && npm run verify:core-bundle && npm run verify:format-agnostic-core && npm run verify:legacy-creative && npm run bundle:creative",
+        "build": "tsc && vite build --mode production && npm run bundle && npm run bundle:core && npm run bundle:core:gam && npm run verify:core-bundle && npm run verify:format-agnostic-core && npm run verify:legacy-creative && npm run verify:shared-runtime && npm run bundle:creative",
         "bundle": "vite build --mode bundle",
         "bundle:core": "vite build --mode bundle:core",
         "bundle:core:gam": "vite build --mode bundle:core:gam",
         "bundle:creative": "vite build --mode bundle:creative",
+        "verify:shared-runtime": "node scripts/verify-shared-runtime.cjs",
         "verify:core-bundle": "node scripts/verify-core-bundle.cjs",
         "verify:format-agnostic-core": "node scripts/verify-format-agnostic-core.cjs",
         "verify:legacy-creative": "node scripts/verify-legacy-creative.cjs",
