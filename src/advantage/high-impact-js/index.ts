@@ -24,17 +24,19 @@ import {
     GlobalConfig
 } from "./types";
 import logger from "../../utils/logging";
+import { getSharedState } from "../runtime";
 import { registerCompatibilityLayer } from "../compatibility-registry";
 
 /**
  * Internal state object to store slot configurations
  */
-const state = {
+const state = getSharedState("compatibility-state", () => ({
     slots: {} as Record<string, SlotConfig>,
     plugins: {} as Record<string, CompatibilityPlugin>,
     config: {} as GlobalConfig,
     templateConfig: {} as Record<string, TemplateConfig>,
     initialized: false,
+    listening: false,
     pluginsReady: false,
     pluginSetupInProgress: false, // Prevent multiple simultaneous plugin setups
     messageQueue: [] as Array<{
@@ -42,7 +44,7 @@ const state = {
         adMessageData?: any;
         iframeName?: string;
     }>
-};
+}));
 
 /**
  * Maps High Impact JS template names to Advantage format names
@@ -1183,18 +1185,17 @@ export const initializeHighImpactJs = async (): Promise<void> => {
     // Expose helper function for mock GAM to trigger slot rendered events
     highImpactJs._triggerSlotRendered = onAdSlotRendered;
 
-    // Process any queued commands BEFORE replacing cmd
-    if (Array.isArray(highImpactJs.cmd) && highImpactJs.cmd.length > 0) {
-        while (highImpactJs.cmd.length) {
-            const item = highImpactJs.cmd.shift();
-            if (typeof item === "function") {
-                await item();
-            }
+    // Own the pending commands before awaiting any of them. The full entry or
+    // another bundle can publish cmd while an asynchronous command is pending.
+    const pendingCommands = Array.isArray(highImpactJs.cmd)
+        ? highImpactJs.cmd.splice(0)
+        : [];
+    highImpactJs.cmd = cmd;
+    for (const item of pendingCommands) {
+        if (typeof item === "function") {
+            await item();
         }
     }
-
-    // Replace cmd array with our handler
-    highImpactJs.cmd = cmd;
 
     // Set default plugins if not configured
     if (!state.config.plugins) {
@@ -1217,7 +1218,8 @@ registerCompatibilityLayer({
 });
 
 // Set up message listener immediately when module loads (not waiting for full init)
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && !state.listening) {
+    state.listening = true;
     listenToHighImpactPostMessages(onAdResponsiveSignal);
 
     // Pre-initialize plugins with default configuration for speed (GAM only for now)

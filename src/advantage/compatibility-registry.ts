@@ -1,10 +1,14 @@
 import type { MergedIntegrationConfig } from "../types";
 
+import { getSharedState } from "./runtime";
+
 type CompatibilityInitializer = () => Promise<void>;
 type CompatibilityConfigProvider = () => Partial<MergedIntegrationConfig>;
 
-let initializeCompatibilityLayer: CompatibilityInitializer | undefined;
-let compatibilityConfigProvider: CompatibilityConfigProvider | undefined;
+const sharedHooks = getSharedState<{
+    initialize?: CompatibilityInitializer;
+    getConfig?: CompatibilityConfigProvider;
+}>("compatibility-hooks", () => ({}));
 
 /**
  * Connects the optional High Impact JS compatibility package to Advantage core.
@@ -16,19 +20,19 @@ export const registerCompatibilityLayer = (hooks: {
     initialize: CompatibilityInitializer;
     getConfig: CompatibilityConfigProvider;
 }): void => {
-    initializeCompatibilityLayer = hooks.initialize;
-    compatibilityConfigProvider = hooks.getConfig;
+    sharedHooks.initialize ??= hooks.initialize;
+    sharedHooks.getConfig ??= hooks.getConfig;
 };
 
 /** @internal */
 export const initializeRegisteredCompatibilityLayer =
-    (): Promise<void> | undefined => initializeCompatibilityLayer?.();
+    (): Promise<void> | undefined => sharedHooks.initialize?.();
 
 /** @internal */
 export const getRegisteredCompatibilityConfig =
     (): Partial<MergedIntegrationConfig> =>
-        compatibilityConfigProvider?.() ?? {};
+        sharedHooks.getConfig?.() ?? {};
 
 /** @internal */
 export const isCompatibilityLayerRegistered = (): boolean =>
-    initializeCompatibilityLayer !== undefined;
+    sharedHooks.initialize !== undefined;

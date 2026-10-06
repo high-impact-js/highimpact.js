@@ -7,18 +7,11 @@ export { actualAdvantageWrapAdSlotElement as advantageWrapAdSlotElement };
 export * from "./messaging";
 export * from "../types";
 
-if (typeof window !== "undefined") {
-    // Process any wrapping requests queued before Advantage core loaded.
-    if ((window as any).advantageWrapQueue) {
-        for (const item of (window as any).advantageWrapQueue) {
-            const [target, excludedFormats] = item;
-            actualAdvantageWrapAdSlotElement(target, excludedFormats);
-        }
-    }
+import { getSharedState } from "./runtime";
 
-    (window as any).advantageWrapAdSlotElement =
-        actualAdvantageWrapAdSlotElement;
-}
+const installation = getSharedState("core-installation", () => ({
+    installed: false
+}));
 
 const executeQueuedCallback = (callback: any) => {
     try {
@@ -29,33 +22,38 @@ const executeQueuedCallback = (callback: any) => {
 };
 
 const processQueue = () => {
-    if ((window as any).advantageCmdQueue) {
-        for (const callback of (window as any).advantageCmdQueue) {
-            executeQueuedCallback(callback);
-        }
-    } else {
-        (window as any).advantageCmdQueue = [];
-    }
-
-    (window as any).advantageCmdQueue.push = function (callback: any) {
+    const queue = ((window as any).advantageCmdQueue ??= []);
+    const pending = queue.splice(0);
+    queue.push = function (callback: any) {
         Array.prototype.push.call(this, callback);
         executeQueuedCallback(callback);
     };
+    for (const callback of pending) {
+        executeQueuedCallback(callback);
+    }
 };
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", processQueue, { once: true });
-} else {
-    processQueue();
-}
+if (!installation.installed) {
+    // Set the guard before callbacks run: they may evaluate another bundle.
+    installation.installed = true;
+    if (!customElements.get("advantage-wrapper")) {
+        customElements.define("advantage-wrapper", AdvantageWrapper);
+    }
+    if (!customElements.get("advantage-ui-layer")) {
+        customElements.define("advantage-ui-layer", AdvantageUILayer);
+    }
+    (window as any).advantageWrapAdSlotElement = actualAdvantageWrapAdSlotElement;
+    (window as any).advantageCmd = executeQueuedCallback;
 
-(window as any).advantageCmd = function (callback: any) {
-    executeQueuedCallback(callback);
-};
-
-if (!customElements.get("advantage-wrapper")) {
-    customElements.define("advantage-wrapper", AdvantageWrapper);
-}
-if (!customElements.get("advantage-ui-layer")) {
-    customElements.define("advantage-ui-layer", AdvantageUILayer);
+    const wrapQueue = (window as any).advantageWrapQueue;
+    if (wrapQueue) {
+        for (const [target, excludedFormats] of wrapQueue.splice(0)) {
+            actualAdvantageWrapAdSlotElement(target, excludedFormats);
+        }
+    }
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", processQueue, { once: true });
+    } else {
+        processQueue();
+    }
 }
