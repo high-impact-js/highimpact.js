@@ -32,6 +32,7 @@ const sendFormatAgnosticSignal = (iframe: HTMLIFrameElement) => {
 describe("format-agnostic creatives in Advantage core", () => {
     beforeEach(() => {
         document.body.innerHTML = "";
+        Advantage.getInstance().configure({}, { merge: false });
         Advantage.getInstance().configure({
             formatAgnosticCreatives: {
                 formatMappings: [
@@ -50,6 +51,17 @@ describe("format-agnostic creatives in Advantage core", () => {
 
     afterEach(() => {
         jest.restoreAllMocks();
+    });
+
+    it("still activates after an unrelated configuration update", () => {
+        const { wrapper, iframe } = createWrappedSlot("incremental-slot");
+        const force = jest.spyOn(wrapper, "forceFormat").mockResolvedValue(undefined);
+        Advantage.getInstance().configure({ messageValidator: () => true });
+        Advantage.getInstance().reportSlotRendered({
+            elementId: "incremental-slot", size: [1, 1]
+        });
+        sendFormatAgnosticSignal(iframe);
+        expect(force).toHaveBeenCalledWith(AdvantageFormatName.TopScroll, iframe);
     });
 
     it("maps the same creative signal to formats using reported sizes", async () => {

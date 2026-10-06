@@ -24,22 +24,28 @@ export interface AdvantageAd {
     iframe?: HTMLElement;
 }
 
+/** Controls how a configure call applies its local or remotely loaded config. */
+export interface AdvantageConfigureOptions {
+    /** Shallow-merge top-level keys by default; false replaces all settings. */
+    merge?: boolean;
+}
+
 export interface AdvantageConfig {
-    configUrlResolver?: () => string;
-    formats?: AdvantageFormat[];
-    formatIntegrations?: AdvantageFormatIntegration[];
-    messageValidator?: (
+    configUrlResolver?: (() => string) | undefined;
+    formats?: AdvantageFormat[] | undefined;
+    formatIntegrations?: AdvantageFormatIntegration[] | undefined;
+    messageValidator?: ((
         parentElement: HTMLElement | IAdvantageWrapper,
         message: MessageEvent<any>
-    ) => boolean;
-    enableHighImpactCompatibility?: boolean;
+    ) => boolean) | undefined;
+    enableHighImpactCompatibility?: boolean | undefined;
     /**
      * Enables format-agnostic High Impact JS creatives in the lean Advantage
      * entry point.
      *
      * @experimental The configuration shape may change before release.
      */
-    formatAgnosticCreatives?: AdvantageFormatAgnosticCreatives;
+    formatAgnosticCreatives?: AdvantageFormatAgnosticCreatives | undefined;
 }
 
 /** @experimental The format-agnostic creative API may change before release. */

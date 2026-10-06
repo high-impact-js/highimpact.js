@@ -45,6 +45,18 @@ async function main() {
             reset: () => { calls.push("reset"); },
             close: () => { calls.push("close"); }
         }] });
+        const mappings = { formatMappings: [{ format: "PACKAGE_TEST", sizes: [[970, 250]] }] };
+        advantage.configure({
+            formatIntegrations: [{ format: "PACKAGE_TEST", setup: async () => {} }],
+            formatAgnosticCreatives: mappings
+        });
+        advantage.configure({ messageValidator: () => true });
+        assert.ok(advantage.formats.has("PACKAGE_TEST"), "Unrelated updates preserve custom formats");
+        assert.equal(advantage.config.formatAgnosticCreatives, mappings);
+        assert.ok(advantage.formatIntegrations.has("PACKAGE_TEST"));
+        advantage.configure({ formatIntegrations: [], formatAgnosticCreatives: undefined });
+        assert.equal(advantage.formatIntegrations.size, 0);
+        assert.equal(advantage.config.formatAgnosticCreatives, undefined);
         const wrapper = window.document.createElement("advantage-wrapper");
         window.document.body.append(wrapper);
         await wrapper.morphIntoFormat("PACKAGE_TEST");
@@ -67,6 +79,9 @@ async function main() {
         await assert.rejects(wrapper.close(), /close failure/);
         advantage.formats.get("PACKAGE_TEST").reset = () => {};
         await wrapper.reset();
+        advantage.configure({}, { merge: false });
+        assert.equal(advantage.formats.has("PACKAGE_TEST"), false);
+        assert.deepEqual(Object.keys(advantage.config), []);
     }
     if (api.connectGoogleAdManager) {
         let handler;
