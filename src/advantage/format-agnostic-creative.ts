@@ -4,6 +4,7 @@ import type {
     IAdvantageWrapper
 } from "../types";
 import { logger } from "../utils";
+import { getSharedState } from "./runtime";
 
 interface FormatAgnosticCreativeContext {
     config: AdvantageConfig | null;
@@ -21,10 +22,13 @@ interface FormatAgnosticCreativeState {
 // with a later refresh while still allowing either event to arrive first.
 const MAX_RENDEZVOUS_DELAY_MS = 10_000;
 
-const statesByContext = new WeakMap<
-    FormatAgnosticCreativeContext,
-    WeakMap<IAdvantageWrapper, FormatAgnosticCreativeState>
->();
+const statesByContext = getSharedState(
+    "creative-signals",
+    () => new WeakMap<
+        FormatAgnosticCreativeContext,
+        WeakMap<IAdvantageWrapper, FormatAgnosticCreativeState>
+    >()
+);
 
 const getStates = (context: FormatAgnosticCreativeContext) => {
     let states = statesByContext.get(context);

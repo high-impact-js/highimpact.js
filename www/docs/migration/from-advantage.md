@@ -126,3 +126,23 @@ No. The `AdvantageCreativeMessenger` works exactly as before. Just update the im
 ### What about `formatIntegrations` in my Advantage config?
 
 They continue to work. The Slot API's `setTemplateConfig` serves a similar purpose but with a different API shape. You can use either or both — they don't conflict.
+
+## Multiple bundles in one window
+
+`Advantage.getInstance()` shares one instance across independently bundled copies
+of the **same package version** within a browser realm. Configuration, wrapper
+registration, creative signal pairing, and compatibility configuration all use
+that shared runtime. Loading core and the full entry in either order is supported;
+loading the full entry adds compatibility support. Repeated loading does not
+replay command or wrapping queues or reinstall compatibility listeners/plugins.
+
+Different package versions are deliberately unsupported in the same window. A
+later participating copy throws an error identifying the version conflict before
+installing its runtime. Use one version throughout the page, or externalize the
+library from consumer bundles. Older releases without the shared runtime cannot
+participate in this check and must not be mixed with it.
+
+Each iframe/window has its own runtime. The registry is internal; it is not a
+public reset API. `getInstance()` returns the shared object, which can have been
+constructed by another bundle's class, so cross-bundle `instanceof Advantage`
+checks should not be used. This change does not alter `configure()` merge rules.
