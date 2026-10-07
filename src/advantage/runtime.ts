@@ -13,7 +13,8 @@ const host = globalThis as typeof globalThis & { [key]?: Runtime };
 const existing = host[key];
 if (existing && (existing.protocol !== 1 || existing.version !== version)) {
     throw new Error(
-        `highimpact.js ${version} cannot load alongside runtime ${existing.version}. Load one package version per window.`
+        `highimpact.js ${version} cannot load alongside runtime ${existing.version}. Load one package version per window: ` +
+            "https://gethighimpact.org/docs/migration/from-advantage#multiple-bundles-in-one-window"
     );
 }
 const runtime = (host[key] ??= {
