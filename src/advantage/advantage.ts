@@ -27,6 +27,7 @@ export class Advantage {
     formatIntegrations: Map<string, AdvantageFormatIntegration> = new Map();
     public static id = 0;
     private configurationRevision = 0;
+    private loadingRevision = -1;
 
     private constructor() {
         Advantage.id++;
@@ -55,6 +56,11 @@ export class Advantage {
         } else {
             this.applyConfig(config, merge);
         }
+    }
+
+    /** @internal Whether the most recent configure call is loading remotely. */
+    public get isConfigLoading(): boolean {
+        return this.loadingRevision === this.configurationRevision;
     }
 
     // Public method to register a wrapper with the library.
@@ -97,6 +103,7 @@ export class Advantage {
     // Private method to load the configuration from a remote file.
     private loadConfig(configUrl: string, merge: boolean, revision: number) {
         logger.info(`⬇ Loading config from remote URL: ${configUrl}`);
+        this.loadingRevision = revision;
         import(/* @vite-ignore */ configUrl)
             .then((module) => {
                 if (revision !== this.configurationRevision) return;
@@ -105,6 +112,9 @@ export class Advantage {
             })
             .catch((e) => {
                 logger.error("Error fetching config", e);
+            })
+            .finally(() => {
+                if (revision === this.loadingRevision) this.loadingRevision = -1;
             });
     }
 
