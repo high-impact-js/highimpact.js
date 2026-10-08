@@ -145,8 +145,6 @@ advantage.configure({
     formatIntegrations: [
         {
             format: AdvantageFormatName.DoubleMidscroll,
-            // Every integration needs a setup hook, even if it only sets options
-            setup: async () => {},
             options: {
                 // Recommended: Specify allowed origins for background ads
                 allowedOrigins: [
