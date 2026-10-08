@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
 
-const hostname = "https://high-impact-js.github.io/highimpact.js";
+const hostname = "https://www.gethighimpact.org";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({

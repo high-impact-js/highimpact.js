@@ -46,7 +46,7 @@ getCertifiedSites(rowData);
         const hostName = new URL(params.data.siteUrl).hostname;
         return `<div class="grid grid-cols-[18px_1fr] items-center gap-3">
           <img src="https://icons.duckduckgo.com/ip3/${hostName}.ico" class="rounded-sm" />
-          <a href="${params.data.siteUrl}?utm_source=get-advantage.org" target="blank">${params.data.site}</span></span>
+          <a href="${params.data.siteUrl}?utm_source=gethighimpact.org" target="blank">${params.data.site}</span></span>
         </div>`
       }
     },

@@ -8,10 +8,10 @@ A quick reference for Advantage maintainers. For complete details, see [GOVERNAN
 - [MAINTAINERS.md](MAINTAINERS.md) - Current maintainer roster
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contributor guidelines
 - [CODE-OF-CONDUCT.md](CODE-OF-CONDUCT.md) - Code of conduct
-- [GitHub Issues](https://github.com/get-advantage/advantage/issues)
-- [GitHub PRs](https://github.com/get-advantage/advantage/pulls)
-- [GitHub Projects](https://github.com/orgs/get-advantage/projects) - Public roadmap
-- [Discussions](https://github.com/get-advantage/advantage/discussions)
+- [GitHub Issues](https://github.com/high-impact-js/highimpact.js/issues)
+- [GitHub PRs](https://github.com/high-impact-js/highimpact.js/pulls)
+- [GitHub Projects](https://github.com/orgs/high-impact-js/projects) - Public roadmap
+- [Discussions](https://github.com/high-impact-js/highimpact.js/discussions)
 - [Slack Community](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
 
 ## 📅 Maintainer Meetings
