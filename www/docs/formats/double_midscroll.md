@@ -38,7 +38,7 @@ import {
     AdvantageCreativeMessenger,
     AdvantageMessageAction,
     AdvantageFormatName
-} from "@get-advantage/advantage";
+} from "highimpact.js/creative";
 
 async function initializeAd() {
     const messenger = new AdvantageCreativeMessenger();
@@ -77,7 +77,7 @@ The background creative is the tall visual component that:
 -   Provides the visual backdrop for the experience
 
 ```javascript
-import { AdvantageCreativeMessenger } from "@get-advantage/advantage";
+import { AdvantageCreativeMessenger } from "highimpact.js/creative";
 
 document.addEventListener("DOMContentLoaded", () => {
     const messenger = new AdvantageCreativeMessenger();
@@ -138,10 +138,15 @@ The waypoint system enables sophisticated animations:
 Publishers must configure allowed origins for background ad URLs to maintain security:
 
 ```javascript
+import { Advantage, AdvantageFormatName } from "highimpact.js";
+
+const advantage = Advantage.getInstance();
 advantage.configure({
     formatIntegrations: [
         {
             format: AdvantageFormatName.DoubleMidscroll,
+            // Every integration needs a setup hook, even if it only sets options
+            setup: async () => {},
             options: {
                 // Recommended: Specify allowed origins for background ads
                 allowedOrigins: [
@@ -237,8 +242,8 @@ If you're a creative author, you can examine a working example by cloning this r
 To run the example:
 
 ```bash
-git clone https://github.com/get-advantage/advantage
-cd advantage
+git clone https://github.com/high-impact-js/highimpact.js
+cd highimpact.js
 npm install
 npm run dev
 ```

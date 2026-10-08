@@ -44,7 +44,7 @@ import {
     AdvantageCreativeMessenger,
     AdvantageMessageAction,
     AdvantageFormatName
-} from "@get-advantage/advantage";
+} from "highimpact.js/creative";
 
 async function initializeAd() {
     const messenger = new AdvantageCreativeMessenger();
@@ -189,7 +189,7 @@ The continuous progress value enables sophisticated scroll-based effects:
             AdvantageCreativeMessenger,
             AdvantageMessageAction,
             AdvantageFormatName
-        } from "@get-advantage/advantage";
+        } from "highimpact.js/creative";
 
         async function initializeAd() {
             const messenger = new AdvantageCreativeMessenger();
@@ -239,24 +239,14 @@ The continuous progress value enables sophisticated scroll-based effects:
 
 ### Basic Setup
 
-Publishers can integrate this format without any special configuration:
-
-```javascript
-import { advantage, AdvantageFormatName } from "@get-advantage/advantage";
-
-advantage.configure({
-    formatIntegrations: [
-        {
-            format: AdvantageFormatName.DoubleMidscrollSingleCreative
-            // No additional options required
-        }
-    ]
-});
-```
+This format is built in, so publishers don't need any configuration to support it.
 
 ### Advanced Configuration with Site Adjustments
 
 ```javascript
+import { Advantage, AdvantageFormatName } from "highimpact.js";
+
+const advantage = Advantage.getInstance();
 advantage.configure({
     formatIntegrations: [
         {
@@ -313,8 +303,8 @@ If you're a creative author, you can examine a working example by cloning this r
 To run the example:
 
 ```bash
-git clone https://github.com/get-advantage/advantage
-cd advantage
+git clone https://github.com/high-impact-js/highimpact.js
+cd highimpact.js
 npm install
 npm run dev
 ```

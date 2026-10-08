@@ -103,7 +103,7 @@ For the full story behind the merge, migration guides for both libraries, and th
 ## Community & Support
 
 -   **[GitHub Issues](https://github.com/high-impact-js/highimpact.js/issues)** - Report bugs and request features
--   **[Slack Community](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)** - Connect with other developers and get help
+-   **[Slack Community](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)** - Connect with other developers and get help
 -   **[Contributing Guide](../about/contributions.md)** - Learn how to contribute to the project
 -   **[API Documentation](../api/)** - Complete TypeScript API reference
 -   **[GitHub Repository](https://github.com/high-impact-js/highimpact.js)** - Source code and examples

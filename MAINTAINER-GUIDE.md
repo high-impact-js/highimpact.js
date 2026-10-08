@@ -12,7 +12,7 @@ A quick reference for Advantage maintainers. For complete details, see [GOVERNAN
 - [GitHub PRs](https://github.com/get-advantage/advantage/pulls)
 - [GitHub Projects](https://github.com/orgs/get-advantage/projects) - Public roadmap
 - [Discussions](https://github.com/get-advantage/advantage/discussions)
-- [Slack Community](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+- [Slack Community](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
 
 ## 📅 Maintainer Meetings
 

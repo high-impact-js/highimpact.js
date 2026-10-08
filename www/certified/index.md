@@ -128,4 +128,4 @@ Interested in getting your site certified? Join our community of forward-thinkin
 -   Verified Quality: Certification ensures that your site’s implementation of AdVantage is optimized for performance, user experience, and brand alignment.
 -   Increased Trust: Being a certified AdVantage site signals to advertisers and users alike that your site adheres to the highest standards in digital advertising.
 
-We are proud to recognize these exemplary implementations and look forward to adding more innovative sites to our list. For any questions or assistance with your integration, please join our [Slack channel](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+We are proud to recognize these exemplary implementations and look forward to adding more innovative sites to our list. For any questions or assistance with your integration, please join our [Slack channel](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)

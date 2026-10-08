@@ -451,7 +451,7 @@ This governance document can be amended by:
 For governance questions or concerns:
 - **Email**: community@get-advantage.org
 - **GitHub Discussions**: [Advantage Discussions](https://github.com/get-advantage/advantage/discussions)
-- **Slack**: [Join our Slack](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+- **Slack**: [Join our Slack](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
 
 ---
 
