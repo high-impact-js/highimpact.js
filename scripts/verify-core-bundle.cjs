@@ -7,7 +7,7 @@ const source = bundle.toString("utf8");
 const gzipBytes = gzipSync(bundle, { level: 9 }).byteLength;
 
 const limits = {
-    minifiedBytes: 41_000,
+    minifiedBytes: 41_500,
     gzipBytes: 13_500
 };
 const forbiddenCompatibilityMarkers = [

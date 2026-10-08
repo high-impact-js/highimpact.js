@@ -135,6 +135,14 @@ export class Advantage {
                 integration.format, integration
             ])
         );
+        // Merged updates used to accumulate integrations. Warn outside debug
+        // mode when a non-empty list silently drops earlier ones.
+        if (merge && config.formatIntegrations?.length) {
+            const dropped = [...this.formatIntegrations.keys()].filter((name) => !integrations.has(name));
+            if (dropped.length) {
+                console.warn(`highimpact.js: formatIntegrations replaced, removed ${dropped}`);
+            }
+        }
         this.config = nextConfig;
         this.formats = formats;
         this.formatIntegrations = integrations;
