@@ -122,7 +122,7 @@ the globals after both scripts have loaded:
 The quickest, no-build option — perfect for AdOps and low-code integrations. Add this `<script>` tag to your page:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/highimpact.js/dist/bundles/advantage.umd.cjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.13/dist/bundles/advantage.umd.cjs"></script>
 ```
 
 The smaller Advantage-only CDN bundle is available at
@@ -348,7 +348,7 @@ A complete publisher-side setup:
         });
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/highimpact.js/dist/bundles/advantage.umd.cjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.13/dist/bundles/advantage.umd.cjs"></script>
 ```
 
 The library will:

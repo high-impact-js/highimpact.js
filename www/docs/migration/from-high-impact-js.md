@@ -52,7 +52,7 @@ Replace the original High Impact JS script with the new library:
 
 ```diff
 - <script src="https://cdn.seenthis.se/high-impact-js/latest/high-impact-js.min.js"></script>
-+ <script src="https://cdn.jsdelivr.net/npm/highimpact.js/dist/bundles/advantage.umd.cjs"></script>
++ <script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.13/dist/bundles/advantage.umd.cjs"></script>
 ```
 
 Or install via npm:
