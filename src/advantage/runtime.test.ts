@@ -54,3 +54,18 @@ describe("shared creative rendezvous", () => {
         }
     );
 });
+
+describe("runtime version conflicts", () => {
+    it("refuses a different version and links the migration guide", () => {
+        copy();
+        const runtime = (globalThis as any)[Symbol.for("highimpact.js/runtime")];
+        const version = runtime.version;
+        runtime.version = "0.0.0-other";
+        try {
+            expect(copy).toThrow(/cannot load alongside runtime 0\.0\.0-other/);
+            expect(copy).toThrow("#multiple-bundles-in-one-window");
+        } finally {
+            runtime.version = version;
+        }
+    });
+});
