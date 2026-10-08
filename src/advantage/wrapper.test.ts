@@ -69,4 +69,20 @@ describe("active wrapper lifecycle configuration", () => {
         expect(format.reset).toHaveBeenCalledTimes(1);
         expect(integration.reset).not.toHaveBeenCalled();
     });
+
+    it("activates an options-only integration without a setup hook", async () => {
+        const { format } = definitions();
+        const advantage = Advantage.getInstance();
+        advantage.configure({
+            formats: [format],
+            formatIntegrations: [{ format: "CUSTOM", options: { closeButton: false } }]
+        });
+        const wrapper = createWrapper();
+        await expect(wrapper.morphIntoFormat("CUSTOM")).resolves.toBeUndefined();
+        expect(format.setup).toHaveBeenCalledWith(
+            wrapper, undefined, expect.objectContaining({ closeButton: false })
+        );
+        await wrapper.reset();
+        expect(format.reset).toHaveBeenCalledTimes(1);
+    });
 });

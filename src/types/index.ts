@@ -202,7 +202,8 @@ export interface AdvantageFormatOptions {
 export interface AdvantageFormatIntegration {
     format: AdvantageFormatName | string;
     options?: AdvantageFormatOptions;
-    setup: (
+    /** Optional site-specific adjustments; omit it to only supply options. */
+    setup?: (
         wrapper: IAdvantageWrapper,
         adIframe?: HTMLIFrameElement | HTMLElement,
         config?: MergedIntegrationConfig

@@ -406,7 +406,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                 });
 
                 // 2. Then we call the integration setup function to apply site-specific adjustments
-                await integration?.setup(
+                await integration?.setup?.(
                     this,
                     this.messageHandler.ad?.iframe,
                     mergedConfig
