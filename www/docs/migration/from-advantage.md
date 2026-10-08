@@ -171,6 +171,11 @@ reset or close. New activations use the latest configuration. Compatibility
 initialization is requested only when the incoming config explicitly sets
 `enableHighImpactCompatibility: true`; unrelated updates do not request it again.
 
+`advantage.config` holds a copy of the supplied settings, so mutating your config
+object after `configure()` has no effect; call `configure()` with the changed
+setting instead. `advantage.formats` and `advantage.formatIntegrations` are
+rebuilt on every call, so entries added to those maps directly are discarded.
+
 ### Remote configuration
 
 A `configUrlResolver` supplied in a call loads a module that must default-export a
@@ -192,7 +197,22 @@ before configuration or derived maps are replaced. Invalid local updates throw
 synchronously and also leave the previous state intact. Replacement mode also
 waits for a valid result before replacing settings. `configure()` remains synchronous and returns `void`; when
 using remote loading, combine the intended settings in the exported config
-instead of following the load request with an immediate local update.
+instead of following the load request with an immediate local update. Slot API
+calls (`defineSlot`, `setConfig`, `setTemplateConfig`) made while a remote config
+is loading do not supersede it.
+
+### Validation errors
+
+An invalid configuration throws a `TypeError` that names the offending field:
+
+```
+TypeError: Invalid Advantage configuration: config.formats[0].reset must be a function
+```
+
+Custom formats require `name`, `setup` and `reset`; `description` is optional at
+runtime. Integrations require `format` and `setup`. `enableHighImpactCompatibility`
+must be a boolean, `formatAgnosticCreatives` sizes must be `[width, height]` number
+pairs, and the config and integration `options` must be plain objects.
 
 ## Multiple bundles in one window
 

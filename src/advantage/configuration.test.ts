@@ -195,4 +195,22 @@ describe("Advantage configuration updates", () => {
         expect(logger.error).toHaveBeenCalled();
     });
 
+    it.each([
+        [{ formats: [{ name: "BAD", setup: async () => {} }] }, "config.formats[0].reset must be a function"],
+        [{ enableHighImpactCompatibility: "true" }, "config.enableHighImpactCompatibility must be a boolean"],
+        [{ formatIntegrations: [{ format: "", setup: async () => {} }] }, "config.formatIntegrations[0].format must be a non-empty string"],
+        [{ formatAgnosticCreatives: { formatMappings: [{ format: "BAD", sizes: [[970, "250"]] }] } },
+            "config.formatAgnosticCreatives.formatMappings[0].sizes[0] must be a [width, height] pair of finite numbers"]
+    ])("names the invalid field in local update errors", (value, message) => {
+        expect(() => advantage.configure(value as any)).toThrow(
+            new TypeError(`Invalid Advantage configuration: ${message}`)
+        );
+    });
+
+    it("accepts formats without a description", () => {
+        const { description: _description, ...undescribed } = format("CUSTOM");
+        advantage.configure({ formats: [undescribed as AdvantageFormat] });
+        expect(advantage.formats.get("CUSTOM")).toBe(undescribed);
+    });
+
 });

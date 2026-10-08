@@ -35,18 +35,12 @@ const ensureAutoInit = (): void => {
 
         // Ensure Advantage is configured with High Impact JS compatibility
         const advantage = Advantage.getInstance();
-        if (!advantage.config) {
+        // A configure call would supersede a pending remote config, so leave
+        // that load to populate the configuration.
+        if (!advantage.config && !advantage.isConfigLoading) {
             // Configure with minimal defaults that enable High Impact JS compatibility
             advantage.configure({
                 enableHighImpactCompatibility: true
-            });
-        } else if (!advantage.config.enableHighImpactCompatibility) {
-            // If already configured but without High Impact JS compatibility, initialize it manually
-            initializeHighImpactJs().catch((error) => {
-                logger.error(
-                    "Auto-initialization of High Impact JS failed:",
-                    error
-                );
             });
         }
 
