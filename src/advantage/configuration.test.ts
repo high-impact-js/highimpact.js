@@ -207,6 +207,22 @@ describe("Advantage configuration updates", () => {
         );
     });
 
+    it("warns when a merged update drops previously configured integrations", () => {
+        const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+        const integration = (name: string) => ({ format: name, setup: async () => {} });
+        advantage.configure({ formatIntegrations: [integration("A"), integration("B")] });
+        advantage.configure({ formatIntegrations: [integration("B")] });
+        expect(warn).toHaveBeenCalledTimes(1);
+        expect(warn.mock.calls[0][0]).toContain("removed A");
+
+        warn.mockClear();
+        advantage.configure({ formatIntegrations: [integration("C")] }, { merge: false });
+        advantage.configure({ formatIntegrations: [] });
+        advantage.configure({ formatIntegrations: [integration("D"), integration("E")] });
+        expect(warn).not.toHaveBeenCalled();
+        warn.mockRestore();
+    });
+
     it("accepts formats without a description", () => {
         const { description: _description, ...undescribed } = format("CUSTOM");
         advantage.configure({ formats: [undescribed as AdvantageFormat] });
