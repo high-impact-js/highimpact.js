@@ -68,7 +68,7 @@ To add this MCP to VSCode, update your .vscode/mcp.json
   "servers": {
     "advantage Docs": {
       "type": "sse",
-      "url": "https://gitmcp.io/get-advantage/advantage"
+      "url": "https://gitmcp.io/high-impact-js/highimpact.js"
     }
   }
 }
@@ -80,7 +80,7 @@ To add this MCP to Cursor, update your ~/.cursor/mcp.json
 {
   "mcpServers": {
     "advantage Docs": {
-      "url": "https://gitmcp.io/get-advantage/advantage"
+      "url": "https://gitmcp.io/high-impact-js/highimpact.js"
     }
   }
 }
@@ -93,7 +93,7 @@ To add this MCP to Claude Desktop, update your claude_desktop_config.json
     "mcpServers": {
         "advantage Docs": {
             "type": "sse",
-            "url": "https://gitmcp.io/get-advantage/advantage"
+            "url": "https://gitmcp.io/high-impact-js/highimpact.js"
         }
     }
 }
@@ -184,9 +184,9 @@ If the MCP server isn't responding:
 
 The MCP server provides real-time access, but if you suspect information is outdated:
 
-1. Check the official documentation at [get-advantage.org](https://get-advantage.org)
+1. Check the official documentation at [gethighimpact.org](https://gethighimpact.org)
 2. Verify your MCP server configuration
-3. Report issues in the [GitHub repository](https://github.com/get-advantage/advantage)
+3. Report issues in the [GitHub repository](https://github.com/high-impact-js/highimpact.js)
 
 ## Development Workflow Integration
 
@@ -199,9 +199,9 @@ The MCP server integrates seamlessly into your development workflow:
 
 ## Community and Support
 
--   **GitHub Issues**: Report bugs or request features at [github.com/get-advantage/advantage](https://github.com/get-advantage/advantage)
--   **Slack Community**: Join discussions at [Advantage Slack](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
--   **Documentation**: Visit [get-advantage.org](https://get-advantage.org) for comprehensive guides
+-   **GitHub Issues**: Report bugs or request features at [github.com/high-impact-js/highimpact.js](https://github.com/high-impact-js/highimpact.js)
+-   **Slack Community**: Join discussions at [High Impact JS Slack](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+-   **Documentation**: Visit [gethighimpact.org](https://gethighimpact.org) for comprehensive guides
 
 ---
 

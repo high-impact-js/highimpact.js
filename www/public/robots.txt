@@ -4,4 +4,4 @@ Disallow: /tmp/
 Disallow: /junk/
 Allow: /
 
-Sitemap: https://www.get-advantage.org/sitemap.xml
+Sitemap: https://www.gethighimpact.org/sitemap.xml

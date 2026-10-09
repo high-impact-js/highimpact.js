@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
 
-const hostname = "https://high-impact-js.github.io/highimpact.js";
+const hostname = "https://www.gethighimpact.org";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -89,7 +89,7 @@ export default defineConfig({
             },
             {
                 icon: "slack",
-                link: "https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ"
+                link: "https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ"
             }
         ],
         editLink: {

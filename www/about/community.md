@@ -38,7 +38,7 @@ To become a maintainer, you should:
 2. Demonstrate community leadership and good judgment
 3. Be nominated by an existing maintainer or self-nominate
 
-See our [Governance Documentation](https://github.com/get-advantage/advantage/blob/main/GOVERNANCE.md) for detailed criteria, or view our [current maintainers](https://github.com/get-advantage/advantage/blob/main/MAINTAINERS.md).
+See our [Governance Documentation](https://github.com/high-impact-js/highimpact.js/blob/main/GOVERNANCE.md) for detailed criteria, or view our [current maintainers](https://github.com/high-impact-js/highimpact.js/blob/main/MAINTAINERS.md).
 
 ### 💻 Contributors
 
@@ -52,7 +52,7 @@ See our [Governance Documentation](https://github.com/get-advantage/advantage/bl
 - Feature suggestions
 - Community support
 
-Read more in our [Contributing Guide](https://github.com/get-advantage/advantage/blob/main/CONTRIBUTING.md).
+Read more in our [Contributing Guide](https://github.com/high-impact-js/highimpact.js/blob/main/CONTRIBUTING.md).
 
 ### 🤝 Supporting Members
 
@@ -105,7 +105,7 @@ Advantage is built by and for the entire digital advertising ecosystem. We espec
 
 ### 💬 Join the Conversation
 
-**[GitHub Discussions](https://github.com/get-advantage/advantage/discussions)** - Help shape the future of high-impact advertising:
+**[GitHub Discussions](https://github.com/high-impact-js/highimpact.js/discussions)** - Help shape the future of high-impact advertising:
 
 - 💡 **Ideas**: Propose new features and improvements
 - 🗳️ **Polls**: Vote on proposals and provide input
@@ -115,7 +115,7 @@ Advantage is built by and for the entire digital advertising ecosystem. We espec
 
 ### 📊 Follow the Roadmap
 
-Check out our **[GitHub Projects](https://github.com/orgs/get-advantage/projects)** to see:
+Check out our **[GitHub Projects](https://github.com/orgs/high-impact-js/projects)** to see:
 
 - **Planned**: What's coming next
 - **In Progress**: What we're currently working on

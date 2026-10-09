@@ -225,7 +225,7 @@ For complete details about maintainer roles, responsibilities, and governance, s
 
 If you have questions about becoming a maintainer or want to learn more:
 - Email: community@get-advantage.org
-- Join our [Slack community](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+- Join our [Slack community](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
 - Start a [GitHub Discussion](https://github.com/high-impact-js/highimpact.js/discussions)
 
 <!-- omit in toc -->

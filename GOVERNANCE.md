@@ -213,7 +213,7 @@ Additional meetings may be called as needed for:
 
 We use **GitHub Projects** to maintain transparency and keep the community informed:
 
-**Public Roadmap**: [Advantage Roadmap](https://github.com/orgs/get-advantage/projects)
+**Public Roadmap**: [High Impact JS Roadmap](https://github.com/orgs/high-impact-js/projects)
 - **Planned**: Features and improvements we're considering
 - **In Progress (WIP)**: Active development work
 - **Shipped**: Completed features and fixes
@@ -226,7 +226,7 @@ This gives everyone visibility into:
 
 ### GitHub Discussions - Shape the Future
 
-**[GitHub Discussions](https://github.com/get-advantage/advantage/discussions)** is our primary forum for community conversation and collaboration.
+**[GitHub Discussions](https://github.com/high-impact-js/highimpact.js/discussions)** is our primary forum for community conversation and collaboration.
 
 **Discussion Categories:**
 - **💡 Ideas**: Propose new features and improvements
@@ -450,8 +450,8 @@ This governance document can be amended by:
 
 For governance questions or concerns:
 - **Email**: community@get-advantage.org
-- **GitHub Discussions**: [Advantage Discussions](https://github.com/get-advantage/advantage/discussions)
-- **Slack**: [Join our Slack](https://join.slack.com/t/get-advantage/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
+- **GitHub Discussions**: [High Impact JS Discussions](https://github.com/high-impact-js/highimpact.js/discussions)
+- **Slack**: [Join our Slack](https://join.slack.com/t/high-impact-js/shared_invite/zt-2gy6c4z4m-4~pIuwRfe8eqPM5H7iV9MQ)
 
 ---
 

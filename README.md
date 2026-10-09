@@ -14,10 +14,10 @@
 <h3 align="center">The open JavaScript library for high-performing ad formats</h3>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@get-advantage/advantage"><img src="https://img.shields.io/npm/v/@get-advantage/advantage?label=npm" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/highimpact.js"><img src="https://img.shields.io/npm/v/highimpact.js?label=npm" alt="npm version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="contributions welcome"></a>
-  <a href="https://www.jsdelivr.com/package/npm/@get-advantage/advantage"><img src="https://data.jsdelivr.com/v1/package/npm/@get-advantage/advantage/badge" alt="jsDelivr hits"></a>
+  <a href="https://www.jsdelivr.com/package/npm/highimpact.js"><img src="https://data.jsdelivr.com/v1/package/npm/highimpact.js/badge" alt="jsDelivr hits"></a>
 </p>
 
 ---
@@ -58,7 +58,7 @@ highimpact.js was built to fix that. It formalizes the contract between publishe
 npm install highimpact.js
 
 # or legacy name (identical package)
-npm install @get-advantage/advantage
+npm install highimpact.js
 ```
 
 ### Add to your page
@@ -83,7 +83,7 @@ Wrap any ad slot you want highimpact.js to manage with the `<advantage-wrapper>`
 
 That's it. highimpact.js handles format negotiation, creative communication, and lifecycle management from there.
 
-Read the full [documentation](https://get-advantage.org) for configuration options, format guides, and advanced usage.
+Read the full [documentation](https://gethighimpact.org) for configuration options, format guides, and advanced usage.
 
 ---
 
