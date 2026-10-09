@@ -210,9 +210,10 @@ TypeError: Invalid Advantage configuration: config.formats[0].reset must be a fu
 ```
 
 Custom formats require `name`, `setup` and `reset`; `description` is optional at
-runtime. Integrations require `format` and `setup`. `enableHighImpactCompatibility`
-must be a boolean, `formatAgnosticCreatives` sizes must be `[width, height]` number
-pairs, and the config and integration `options` must be plain objects.
+runtime. Integrations require `format`; `setup` is optional, so an integration can
+supply only `options`. `enableHighImpactCompatibility` must be a boolean,
+`formatAgnosticCreatives` sizes must be `[width, height]` number pairs, and the
+config and integration `options` must be plain objects.
 
 ## Multiple bundles in one window
 

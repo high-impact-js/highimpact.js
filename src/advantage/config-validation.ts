@@ -52,8 +52,7 @@ export function validateConfig(value: unknown): asserts value is AdvantageConfig
     optionalArray(config.formatIntegrations, "config.formatIntegrations", (integration, path) => {
         plainObject(integration, path);
         name(integration.format, `${path}.format`);
-        check(typeof integration.setup === "function", `${path}.setup`, "a function");
-        optionalFunctions(integration, path, ["reset", "close", "teardown", "onReset", "onClose"]);
+        optionalFunctions(integration, path, ["setup", "reset", "close", "teardown", "onReset", "onClose"]);
         if (integration.options !== undefined) plainObject(integration.options, `${path}.options`);
     });
     const creatives = config.formatAgnosticCreatives;
