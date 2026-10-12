@@ -17,7 +17,7 @@ The fastest way to build an Advantage-compatible ad is to use the CDN-hosted lib
 Add this to your ad's HTML:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.13/dist/bundles/creative-side.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/creative-side.iife.js"></script>
 ```
 
 ### 2. Request a Format

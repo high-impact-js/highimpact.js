@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.13.0...hijs-v0.14.0) (2026-10-12)
+
+
+### Bug Fixes
+
+* keep pending remote config when Slot API auto-initializes ([36b242b](https://github.com/high-impact-js/highimpact.js/commit/36b242ba99eb2be1143a70634f9b2b9c62ef4c6f))
+* link the migration guide from the runtime version-conflict error ([1c653a4](https://github.com/high-impact-js/highimpact.js/commit/1c653a46a50585531370d533fc1591b145d4bd25)), closes [#10](https://github.com/high-impact-js/highimpact.js/issues/10)
+* name the invalid field in configuration errors ([d68d55e](https://github.com/high-impact-js/highimpact.js/commit/d68d55e2d206402ff3b0ce11def749a38602dbaf))
+* share Advantage runtime across duplicate bundles ([7d385ba](https://github.com/high-impact-js/highimpact.js/commit/7d385bae1a22f4d5f7408724a0aac5c300c6281e))
+* validate configuration atomically and retain active lifecycle hooks ([396ac78](https://github.com/high-impact-js/highimpact.js/commit/396ac78db0d9639a09d5a2e07387f3793fd1af6a))
+* warn when a configure call drops existing format integrations ([cfd35e9](https://github.com/high-impact-js/highimpact.js/commit/cfd35e9c58a5e7772aa5047268582c5d777d7044))
+
+
+### Features
+
+* make format integration setup optional ([9dc110f](https://github.com/high-impact-js/highimpact.js/commit/9dc110f91bb3538bca77808eeda3cce2a8e2a0a0))
+
 # [0.13.0](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.12.0...hijs-v0.13.0) (2026-09-22)
 
 
