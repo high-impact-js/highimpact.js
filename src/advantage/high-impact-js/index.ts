@@ -14,7 +14,7 @@
  * - Async command queue (cmd.push)
  */
 
-import { AdvantageFormatName } from "../../types";
+import { AdvantageFormatName, AdvantageFormatOptions } from "../../types";
 import { GAMPlugin } from "./plugins/gam";
 import { XandrPlugin } from "./plugins/xandr";
 import {
@@ -1212,9 +1212,33 @@ export const initializeHighImpactJs = async (): Promise<void> => {
     logger.debug("[High Impact Compatibility] Initialization complete");
 };
 
+/**
+ * Format options for an Advantage format, derived from the template config
+ * set with setTemplateConfig. Used by the wrapper when a creative requests
+ * the format itself, so peekAmount etc. apply on that path too.
+ */
+export const getFormatOptionsForFormat = (
+    format: string
+): AdvantageFormatOptions | undefined => {
+    const formatName = format.toUpperCase();
+    const template = Object.keys(TEMPLATE_TO_FORMAT_MAP).find(
+        (name) => TEMPLATE_TO_FORMAT_MAP[name] === formatName
+    );
+    const templateConfig = template && state.templateConfig[template];
+    if (!template || !templateConfig) {
+        return undefined;
+    }
+    return convertTemplateConfigToFormatOptions(
+        template,
+        templateConfig,
+        getConfig()
+    );
+};
+
 registerCompatibilityLayer({
     initialize: initializeHighImpactJs,
-    getConfig
+    getConfig,
+    getFormatOptions: getFormatOptionsForFormat
 });
 
 // Set up message listener immediately when module loads (not waiting for full init)

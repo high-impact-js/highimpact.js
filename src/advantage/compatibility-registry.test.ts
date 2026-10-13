@@ -1,5 +1,6 @@
 import {
     getRegisteredCompatibilityConfig,
+    getRegisteredCompatibilityFormatOptions,
     initializeRegisteredCompatibilityLayer,
     registerCompatibilityLayer
 } from "./compatibility-registry";
@@ -7,6 +8,7 @@ import {
 describe("compatibility registry", () => {
     it("keeps compatibility optional for Advantage core", () => {
         expect(getRegisteredCompatibilityConfig()).toEqual({});
+        expect(getRegisteredCompatibilityFormatOptions("MIDSCROLL")).toEqual({});
         expect(initializeRegisteredCompatibilityLayer()).toBeUndefined();
     });
 
@@ -16,10 +18,16 @@ describe("compatibility registry", () => {
 
         registerCompatibilityLayer({
             initialize,
-            getConfig: () => config
+            getConfig: () => config,
+            getFormatOptions: (format) =>
+                format === "MIDSCROLL" ? { height: 80 } : undefined
         });
 
         expect(getRegisteredCompatibilityConfig()).toEqual(config);
+        expect(getRegisteredCompatibilityFormatOptions("MIDSCROLL")).toEqual({
+            height: 80
+        });
+        expect(getRegisteredCompatibilityFormatOptions("TOPSCROLL")).toEqual({});
         await initializeRegisteredCompatibilityLayer();
         expect(initialize).toHaveBeenCalledTimes(1);
     });

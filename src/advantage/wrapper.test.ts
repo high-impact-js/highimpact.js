@@ -1,4 +1,5 @@
 import { Advantage } from "./core";
+import { registerCompatibilityLayer } from "./compatibility-registry";
 import type { AdvantageFormat, AdvantageFormatIntegration, IAdvantageWrapper } from "../types";
 
 const definitions = () => ({
@@ -84,5 +85,31 @@ describe("active wrapper lifecycle configuration", () => {
         );
         await wrapper.reset();
         expect(format.reset).toHaveBeenCalledTimes(1);
+    });
+
+    it("applies compatibility format options below integration and message options", async () => {
+        registerCompatibilityLayer({
+            initialize: jest.fn().mockResolvedValue(undefined),
+            getConfig: () => ({}),
+            getFormatOptions: (name) =>
+                name === "CUSTOM" ? { height: 70, closeButton: true } : undefined
+        });
+        const { format } = definitions();
+        Advantage.getInstance().configure({
+            formats: [format],
+            formatIntegrations: [{ format: "CUSTOM", options: { closeButton: false } }]
+        });
+        const wrapper = createWrapper();
+        await wrapper.morphIntoFormat("CUSTOM");
+        expect(format.setup).toHaveBeenLastCalledWith(
+            wrapper, undefined, expect.objectContaining({ height: 70, closeButton: false })
+        );
+        await wrapper.reset();
+        await wrapper.morphIntoFormat("CUSTOM", {
+            type: "ADVANTAGE", action: "REQUEST_FORMAT", format: "CUSTOM", sessionID: "s", height: 50
+        } as any);
+        expect(format.setup).toHaveBeenLastCalledWith(
+            wrapper, undefined, expect.objectContaining({ height: 50, closeButton: false })
+        );
     });
 });
