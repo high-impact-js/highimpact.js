@@ -14,7 +14,8 @@ export const midscroll: AdvantageFormat = {
             wrapper.insertCSS(styles);
             if (ad) setDimensionsUntilAdvantageAdSlot(ad);
 
-            // Height is a percentage of the viewport, like topscroll
+            // Height of the visible window as a percentage of the viewport.
+            // The ad itself stays full viewport behind it.
             if (options?.height && options.height <= 100) {
                 wrapper.style.setProperty(
                     "--adv-midscroll-height",

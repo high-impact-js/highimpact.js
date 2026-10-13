@@ -15,9 +15,11 @@
     height: var(--adv-midscroll-height);
     clip-path: inset(0px 0px 0px 0px);
 }
+/* The ad stays full viewport; :host and #container clip it to the
+   configured height so scrolling reveals it through that window. */
 #ad-slot {
     top: 0;
     position: fixed;
     width: 100vw;
-    height: var(--adv-midscroll-height);
+    height: 100vh;
 }
