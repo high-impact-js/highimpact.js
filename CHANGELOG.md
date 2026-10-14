@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.1](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.0...hijs-v0.14.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* **high-impact-js:** only re-apply template config to rendered slots ([cbfe007](https://github.com/high-impact-js/highimpact.js/commit/cbfe0077992de462060317a2ea9da8e79bd9f842))
+* honour peekAmount for midscroll and for creative-requested formats ([931923a](https://github.com/high-impact-js/highimpact.js/commit/931923aa2fe27c6f85850802cdbbc687a5ff18bf))
+* keep the midscroll ad full viewport behind the peek window ([5657865](https://github.com/high-impact-js/highimpact.js/commit/565786555d7ce28e7f6cb1debffae3ca882970ac))
+* serve UMD bundles with a .js extension ([2316a51](https://github.com/high-impact-js/highimpact.js/commit/2316a512742463b122597555690e7d5a9bc44b28))
+
 # [0.14.0](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.13.0...hijs-v0.14.0) (2026-10-12)
 
 
