@@ -17,6 +17,7 @@ import {
     getSlotConfig,
     getTemplateConfig,
     getConfig,
+    getFormatOptionsForFormat,
     initializeHighImpactJs
 } from "./index";
 import { GAMPlugin } from "./plugins/gam";
@@ -191,6 +192,21 @@ describe("High Impact JS Compatibility Layer", () => {
         it("should return empty object for non-existent template", () => {
             const retrievedConfig = getTemplateConfig("non-existent");
             expect(retrievedConfig).toEqual({});
+        });
+
+        it("should expose template config as format options for the mapped format", () => {
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toBeUndefined();
+
+            setTemplateConfig("midscroll", { peekAmount: "80vh" });
+            setTemplateConfig("topscroll", { peekAmount: "70vh", title: "Annonce" });
+
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual(
+                expect.objectContaining({ height: 80 })
+            );
+            expect(getFormatOptionsForFormat("topscroll")).toEqual(
+                expect.objectContaining({ height: 70, closeButtonText: "Annonce" })
+            );
+            expect(getFormatOptionsForFormat("WELCOME_PAGE")).toBeUndefined();
         });
 
         // Pre-wraps a slot and stubs the wrapper instance the custom element

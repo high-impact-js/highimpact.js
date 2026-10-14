@@ -1,5 +1,8 @@
 import { Advantage } from "./advantage";
-import { getRegisteredCompatibilityConfig } from "./compatibility-registry";
+import {
+    getRegisteredCompatibilityConfig,
+    getRegisteredCompatibilityFormatOptions
+} from "./compatibility-registry";
 import {
     AdvantageFormatName,
     AdvantageFormat,
@@ -399,8 +402,11 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
                     config: mergedConfig
                 };
 
-                // 1. First we call the format setup function with optional user defined format options
+                // 1. First we call the format setup function with optional user defined format options.
+                // High Impact JS template config has the lowest priority so that
+                // integration options and the requesting creative can override it.
                 await formatConfig.setup(this, this.messageHandler.ad?.iframe, {
+                    ...getRegisteredCompatibilityFormatOptions(format),
                     ...integration?.options,
                     ...messageOptions
                 });

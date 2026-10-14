@@ -1,9 +1,10 @@
 /* midscroll.css */
 :host {
+    --adv-midscroll-height: 100vh;
     display: block;
     position: relative;
     width: 100vw;
-    height: 100vh;
+    height: var(--adv-midscroll-height);
     overflow: hidden;
     transition: height 0.5s ease-out;
 }
@@ -11,9 +12,11 @@
     position: absolute;
     top: 0;
     width: 100vw;
-    height: 100vh;
+    height: var(--adv-midscroll-height);
     clip-path: inset(0px 0px 0px 0px);
 }
+/* The ad stays full viewport; :host and #container clip it to the
+   configured height so scrolling reveals it through that window. */
 #ad-slot {
     top: 0;
     position: fixed;
