@@ -1,7 +1,7 @@
 const { readFileSync } = require("node:fs");
 const { gzipSync } = require("node:zlib");
 
-const bundlePath = "dist/bundles/advantage-core.umd.cjs";
+const bundlePath = "dist/bundles/advantage-core.umd.js";
 const bundle = readFileSync(bundlePath);
 const source = bundle.toString("utf8");
 const gzipBytes = gzipSync(bundle, { level: 9 }).byteLength;

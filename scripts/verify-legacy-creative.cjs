@@ -37,7 +37,7 @@ const wait = (milliseconds) =>
     new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 async function verify() {
-    window.eval(readFileSync("dist/bundles/advantage.umd.cjs", "utf8"));
+    window.eval(readFileSync("dist/bundles/advantage.umd.js", "utf8"));
     window.highImpactJs.setConfig({ plugins: ["gam"] });
     window.highImpactJs.setTemplateConfig("topscroll", {
         showCloseButton: false

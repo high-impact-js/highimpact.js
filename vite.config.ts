@@ -1,6 +1,6 @@
 // vite.config.ts
 import { resolve } from "path";
-import { ConfigEnv, defineConfig, LibraryFormats, UserConfig } from "vite";
+import { ConfigEnv, defineConfig, LibraryFormats, Plugin, UserConfig } from "vite";
 import dts from "vite-plugin-dts";
 import tsconfigPaths from "vite-tsconfig-paths";
 import noBundlePlugin from "vite-plugin-no-bundle";
@@ -28,6 +28,24 @@ const productionPlugins = [
     ...commonPlugins, // Spread the common plugins here
     noBundlePlugin()
 ];
+
+// Keep emitting the pre-0.14.1 .umd.cjs filenames so existing script tags
+// (self-hosted or via unpkg) keep working. The copy points at the .umd.js map.
+const legacyUmdCopy: Plugin = {
+    name: "legacy-umd-cjs-copy",
+    generateBundle(options, bundle) {
+        if (options.format !== "umd") return;
+        for (const chunk of Object.values(bundle)) {
+            if (chunk.type === "chunk" && chunk.fileName.endsWith(".umd.js")) {
+                this.emitFile({
+                    type: "asset",
+                    fileName: chunk.fileName.replace(/\.umd\.js$/, ".umd.cjs"),
+                    source: chunk.code
+                });
+            }
+        }
+    }
+};
 
 // Base configuration used as a starting point for all builds
 const baseConfig: UserConfig = {
@@ -104,13 +122,19 @@ function createBuildConfig(env: ConfigEnv): UserConfig {
             formats = ["es", "cjs", "umd"];
         }
 
-        buildConfig.plugins = undefined; // plugins are not needed for bundle builds
+        buildConfig.plugins = [legacyUmdCopy];
         buildConfig.build = {
             ...buildConfig.build,
             lib: {
                 entry: [resolve(__dirname, entryFile)],
                 formats: formats,
-                fileName: `${fileNamePrefix}`,
+                // Vite names UMD output .umd.cjs in "type": "module" packages, but
+                // jsDelivr serves .cjs as application/node, which browsers refuse
+                // to execute from a <script> tag.
+                fileName: (format) =>
+                    format === "umd"
+                        ? `${fileNamePrefix}.umd.js`
+                        : `${fileNamePrefix}.${format === "es" ? "js" : format === "iife" ? "iife.js" : "cjs"}`,
                 name: libraryName
             },
             // Preserve the existing browser namespace if a later bundle rejects

@@ -51,9 +51,9 @@ const sendFormatAgnosticSignal = (iframe) => {
 };
 
 async function verify() {
-    window.eval(readFileSync("dist/bundles/advantage-core.umd.cjs", "utf8"));
+    window.eval(readFileSync("dist/bundles/advantage-core.umd.js", "utf8"));
     window.eval(
-        readFileSync("dist/bundles/advantage-core-gam.umd.cjs", "utf8")
+        readFileSync("dist/bundles/advantage-core-gam.umd.js", "utf8")
     );
 
     const advantage = window.advantage.Advantage.getInstance();
