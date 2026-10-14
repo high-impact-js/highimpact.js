@@ -89,20 +89,20 @@ With the npm package you call the API directly on the imported `Advantage` insta
 
 ### Option B — Self-hosted from your own domain {#install-self-hosted}
 
-If you'd rather not depend on a third-party CDN, serve the bundle from your own domain. Grab `dist/bundles/advantage.umd.cjs` from the [npm package](https://www.npmjs.com/package/highimpact.js) (or build it from source), upload it to your server, and load it with a `<script>` tag:
+If you'd rather not depend on a third-party CDN, serve the bundle from your own domain. Grab `dist/bundles/advantage.umd.js` from the [npm package](https://www.npmjs.com/package/highimpact.js) (or build it from source), upload it to your server, and load it with a `<script>` tag:
 
 ```html
-<script src="https://www.your-domain.com/scripts/advantage.umd.cjs"></script>
+<script src="https://www.your-domain.com/scripts/advantage.umd.js"></script>
 ```
 
 For an Advantage-only installation, use
-`dist/bundles/advantage-core.umd.cjs` instead. To support format-agnostic
+`dist/bundles/advantage-core.umd.js` instead. To support format-agnostic
 creatives with GAM, load the optional bridge after the core bundle and configure
 the globals after both scripts have loaded:
 
 ```html
-<script src="https://www.your-domain.com/scripts/advantage-core.umd.cjs"></script>
-<script src="https://www.your-domain.com/scripts/advantage-core-gam.umd.cjs"></script>
+<script src="https://www.your-domain.com/scripts/advantage-core.umd.js"></script>
+<script src="https://www.your-domain.com/scripts/advantage-core-gam.umd.js"></script>
 <script>
     const advantageInstance = advantage.Advantage.getInstance();
     advantageInstance.configure({
@@ -122,12 +122,12 @@ the globals after both scripts have loaded:
 The quickest, no-build option — perfect for AdOps and low-code integrations. Add this `<script>` tag to your page:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.cjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.js"></script>
 ```
 
 The smaller Advantage-only CDN bundle is available at
-`dist/bundles/advantage-core.umd.cjs`. If format-agnostic creatives are
-enabled, also load `dist/bundles/advantage-core-gam.umd.cjs` after it and use
+`dist/bundles/advantage-core.umd.js`. If format-agnostic creatives are
+enabled, also load `dist/bundles/advantage-core-gam.umd.js` after it and use
 the same global configuration shown in the self-hosted example.
 
 <div class="tip custom-block" style="padding-top: 8px">
@@ -348,7 +348,7 @@ A complete publisher-side setup:
         });
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.cjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.js"></script>
 ```
 
 The library will:

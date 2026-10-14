@@ -4,8 +4,8 @@ const { resolve } = require("node:path");
 const { JSDOM } = require("jsdom");
 const { buildSync } = require("esbuild");
 
-const core = readFileSync("dist/bundles/advantage-core.umd.cjs", "utf8");
-const full = readFileSync("dist/bundles/advantage.umd.cjs", "utf8");
+const core = readFileSync("dist/bundles/advantage-core.umd.js", "utf8");
+const full = readFileSync("dist/bundles/advantage.umd.js", "utf8");
 const key = Symbol.for("highimpact.js/runtime");
 
 async function verify(first, second, ready) {

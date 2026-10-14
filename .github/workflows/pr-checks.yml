@@ -44,7 +44,7 @@ jobs:
               with:
                   name: advantage-core-pr-${{ github.event.pull_request.number }}
                   path: |
-                      dist/bundles/advantage-core.umd.cjs
-                      dist/bundles/advantage-core-gam.umd.cjs
+                      dist/bundles/advantage-core.umd.js
+                      dist/bundles/advantage-core-gam.umd.js
                   if-no-files-found: error
                   retention-days: 14

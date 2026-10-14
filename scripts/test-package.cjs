@@ -71,7 +71,7 @@ try {
     };
     const expectedFiles = [];
     for (const [name, [expected, globalName]] of Object.entries(bundles)) {
-        for (const [suffix, mode] of [["js", "import"], ["cjs", "require"], [name === "creative-side" ? "iife.js" : "umd.cjs", "script"]]) {
+        for (const [suffix, mode] of [["js", "import"], ["cjs", "require"], ...(name === "creative-side" ? [["iife.js", "script"]] : [["umd.js", "script"], ["umd.cjs", "script"]])]) {
             const filename = `${name}.${suffix}`;
             expectedFiles.push(filename);
             runtime(mode, path.join(installed, "dist/bundles", filename), expected, globalName);

@@ -52,7 +52,7 @@ Replace the original High Impact JS script with the new library:
 
 ```diff
 - <script src="https://cdn.seenthis.se/high-impact-js/latest/high-impact-js.min.js"></script>
-+ <script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.cjs"></script>
++ <script src="https://cdn.jsdelivr.net/npm/highimpact.js@0.14/dist/bundles/advantage.umd.js"></script>
 ```
 
 Or install via npm:
@@ -63,7 +63,7 @@ npm install highimpact.js
 
 Or self-hosted from your own domain:
 
-Grab `dist/bundles/advantage.umd.cjs` from the [npm package](https://www.npmjs.com/package/highimpact.js) (or build it from source), upload it to your server.
+Grab `dist/bundles/advantage.umd.js` from the [npm package](https://www.npmjs.com/package/highimpact.js) (or build it from source), upload it to your server.
 
 
 ### 2. Keep your existing configuration
