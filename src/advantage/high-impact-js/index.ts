@@ -870,73 +870,47 @@ const applyTemplateConfigToExistingSlots = (
         `[High Impact Compatibility] Applying template config retroactively to existing ${template} slots`
     );
 
-    // Find all slots that use this template
+    // Only slots with an active format need updating. A slot that has not
+    // rendered yet reads the template config in onAdSlotRendered, after the
+    // size and waitForAdSignal checks. Forcing a format on it here would skip
+    // those checks and turn whatever renders next into the format.
     Object.values(state.slots).forEach((slotConfig) => {
-        if (
-            slotConfig.template === template &&
-            slotConfig.preWrapped &&
-            slotConfig.wrapperElement
-        ) {
-            logger.debug(
-                `[High Impact Compatibility] Updating pre-wrapped slot ${slotConfig.adUnitId} with new ${template} config`
-            );
-
-            const wrapper = (slotConfig.wrapperElement as any).advantageWrapper;
-            if (wrapper) {
-                // Convert template config to format options
-                const advantageFormat = TEMPLATE_TO_FORMAT_MAP[template];
-                if (advantageFormat) {
-                    const globalConfig = getConfig();
-                    const formatOptions = convertTemplateConfigToFormatOptions(
-                        template,
-                        templateConfig,
-                        globalConfig
-                    );
-
-                    // Re-apply the format with new options
-                    const adIframe =
-                        slotConfig.wrapperElement.querySelector("iframe");
-                    if (adIframe) {
-                        wrapper
-                            .forceFormat(
-                                advantageFormat,
-                                adIframe,
-                                formatOptions
-                            )
-                            .then(() => {
-                                logger.debug(
-                                    `[High Impact Compatibility] Retroactive format applied to ${slotConfig.adUnitId}`
-                                );
-                            })
-                            .catch((error: any) => {
-                                logger.error(
-                                    `[High Impact Compatibility] Failed to apply retroactive format options to ${slotConfig.adUnitId}:`,
-                                    error
-                                );
-                            });
-                    } else {
-                        // No iframe yet, but wrapper exists - apply format without iframe
-                        wrapper
-                            .forceFormat(
-                                advantageFormat,
-                                undefined,
-                                formatOptions
-                            )
-                            .then(() => {
-                                logger.debug(
-                                    `[High Impact Compatibility] Retroactive format applied to ${slotConfig.adUnitId} (no iframe)`
-                                );
-                            })
-                            .catch((error: any) => {
-                                logger.error(
-                                    `[High Impact Compatibility] Failed to apply retroactive format options to ${slotConfig.adUnitId}:`,
-                                    error
-                                );
-                            });
-                    }
-                }
-            }
+        if (slotConfig.template !== template || !slotConfig.rendered) {
+            return;
         }
+
+        const wrapper =
+            slotConfig.rendered.wrapper ??
+            (slotConfig.wrapperElement as any)?.advantageWrapper;
+        const advantageFormat = TEMPLATE_TO_FORMAT_MAP[template];
+        if (!wrapper || !advantageFormat) {
+            return;
+        }
+
+        logger.debug(
+            `[High Impact Compatibility] Updating rendered slot ${slotConfig.adUnitId} with new ${template} config`
+        );
+
+        const formatOptions = convertTemplateConfigToFormatOptions(
+            template,
+            templateConfig,
+            getConfig()
+        );
+        const adIframe = wrapper.querySelector("iframe") ?? undefined;
+
+        wrapper
+            .forceFormat(advantageFormat, adIframe, formatOptions)
+            .then(() => {
+                logger.debug(
+                    `[High Impact Compatibility] Retroactive format applied to ${slotConfig.adUnitId}`
+                );
+            })
+            .catch((error: any) => {
+                logger.error(
+                    `[High Impact Compatibility] Failed to apply retroactive format options to ${slotConfig.adUnitId}:`,
+                    error
+                );
+            });
     });
 };
 
