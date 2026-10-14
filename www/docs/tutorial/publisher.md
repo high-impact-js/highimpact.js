@@ -132,7 +132,7 @@ the same global configuration shown in the self-hosted example.
 
 <div class="tip custom-block" style="padding-top: 8px">
 
-**Tip:** Pin a specific version for production so a new release can't change behaviour unexpectedly, e.g. `highimpact.js@0.11.1`.
+**Tip:** The snippets on this page pin a minor version (`highimpact.js@MAJOR.MINOR`), which receives patch releases only. To control every update in production, pin an exact version (`highimpact.js@MAJOR.MINOR.PATCH`) instead.
 
 </div>
 

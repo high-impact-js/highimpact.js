@@ -5,10 +5,23 @@ All notable changes to this project will be documented in this file. See [Conven
 # [0.14.0](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.13.0...hijs-v0.14.0) (2026-10-12)
 
 
+### ⚠ BREAKING CHANGES
+
+* `Advantage.configure()` shallow-merges top-level settings instead of replacing the configuration; pass `{ merge: false }` to replace it.
+* A supplied `formatIntegrations` array replaces the previous integrations instead of accumulating.
+* A newer `configure()` call cancels a pending remote configuration.
+* `configure()` validates the configuration and throws a `TypeError` naming the invalid field.
+* `advantage.config` holds a copy of the supplied settings, and the `formats` and `formatIntegrations` maps are rebuilt on every call.
+* Loading different highimpact.js versions in the same window throws.
+
+See the [0.14.0 release notes](https://github.com/high-impact-js/highimpact.js/releases/tag/hijs-v0.14.0) for migration steps.
+
+
 ### Bug Fixes
 
+* make Advantage configuration updates shallow and additive ([57ce425](https://github.com/high-impact-js/highimpact.js/commit/57ce42566ad66e3bbd5dfec913c30b8f8850b924)), closes [#6](https://github.com/high-impact-js/highimpact.js/issues/6)
 * keep pending remote config when Slot API auto-initializes ([36b242b](https://github.com/high-impact-js/highimpact.js/commit/36b242ba99eb2be1143a70634f9b2b9c62ef4c6f))
-* link the migration guide from the runtime version-conflict error ([1c653a4](https://github.com/high-impact-js/highimpact.js/commit/1c653a46a50585531370d533fc1591b145d4bd25)), closes [#10](https://github.com/high-impact-js/highimpact.js/issues/10)
+* link the migration guide from the runtime version-conflict error ([1c653a4](https://github.com/high-impact-js/highimpact.js/commit/1c653a46a50585531370d533fc1591b145d4bd25))
 * name the invalid field in configuration errors ([d68d55e](https://github.com/high-impact-js/highimpact.js/commit/d68d55e2d206402ff3b0ce11def749a38602dbaf))
 * share Advantage runtime across duplicate bundles ([7d385ba](https://github.com/high-impact-js/highimpact.js/commit/7d385bae1a22f4d5f7408724a0aac5c300c6281e))
 * validate configuration atomically and retain active lifecycle hooks ([396ac78](https://github.com/high-impact-js/highimpact.js/commit/396ac78db0d9639a09d5a2e07387f3793fd1af6a))

@@ -208,6 +208,51 @@ describe("High Impact JS Compatibility Layer", () => {
             );
             expect(getFormatOptionsForFormat("WELCOME_PAGE")).toBeUndefined();
         });
+
+        // Pre-wraps a slot and stubs the wrapper instance the custom element
+        // would normally provide.
+        const defineWrappedSlot = (adUnitId: string) => {
+            const adUnitElement = document.createElement("div");
+            adUnitElement.id = adUnitId;
+            document.body.appendChild(adUnitElement);
+
+            defineSlot({
+                template: "midscroll",
+                adUnitId,
+                sizes: [[970, 570]],
+                waitForAdSignal: true
+            });
+
+            const wrapperElement = getSlotConfig(adUnitId)!.wrapperElement!;
+            const wrapper = {
+                forceFormat: jest.fn(() => Promise.resolve()),
+                querySelector: () => null
+            };
+            (wrapperElement as any).advantageWrapper = wrapper;
+            return wrapper;
+        };
+
+        it("should not force a format on slots that have not rendered", () => {
+            const wrapper = defineWrappedSlot("unrendered-unit");
+
+            setTemplateConfig("midscroll", { peekAmount: "80vh" });
+
+            expect(wrapper.forceFormat).not.toHaveBeenCalled();
+        });
+
+        it("should re-apply the format on slots that have rendered", () => {
+            const wrapper = defineWrappedSlot("rendered-unit");
+            getSlotConfig("rendered-unit")!.rendered = { wrapper };
+
+            setTemplateConfig("midscroll", { peekAmount: "80vh" });
+
+            expect(wrapper.forceFormat).toHaveBeenCalledTimes(1);
+            expect(wrapper.forceFormat).toHaveBeenCalledWith(
+                "MIDSCROLL",
+                undefined,
+                expect.objectContaining({ height: 80 })
+            );
+        });
     });
 
     describe("setConfig and getConfig", () => {
