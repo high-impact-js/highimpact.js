@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.2](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.1...hijs-v0.14.2) (2026-10-20)
+
+
+### Bug Fixes
+
+* don't set allowed-formats when pre-wrapping in compat mode ([ef0b345](https://github.com/high-impact-js/highimpact.js/commit/ef0b345afd58a81cbf17351b4c887af51cef2372))
+* handle creative-chosen format on compat slots ([ac5ab5e](https://github.com/high-impact-js/highimpact.js/commit/ac5ab5e996a4aafadd84cbbe605d38886c170418))
+
 ## [0.14.1](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.0...hijs-v0.14.1) (2026-10-14)
 
 
