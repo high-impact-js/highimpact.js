@@ -128,7 +128,7 @@ describe("High Impact JS Compatibility Layer", () => {
             // Check that wrapper was created
             const wrapper = document.querySelector("advantage-wrapper");
             expect(wrapper).toBeTruthy();
-            expect(wrapper?.getAttribute("allowed-formats")).toBe("TOPSCROLL");
+            expect(wrapper?.hasAttribute("allowed-formats")).toBe(false);
         });
 
         it("should handle case when DOM element does not exist yet", () => {
@@ -225,7 +225,7 @@ describe("High Impact JS Compatibility Layer", () => {
 
             const wrapperElement = getSlotConfig(adUnitId)!.wrapperElement!;
             const wrapper = {
-                forceFormat: jest.fn(() => Promise.resolve()),
+                forceFormat: jest.fn((..._args: any[]) => Promise.resolve()),
                 querySelector: () => null
             };
             (wrapperElement as any).advantageWrapper = wrapper;
@@ -314,6 +314,108 @@ describe("High Impact JS Compatibility Layer", () => {
 
             const config = getConfig();
             expect(config.plugins).toEqual(["gam", "xandr"]);
+        });
+    });
+
+    describe("creative-chosen format on a midscroll slot", () => {
+        const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+        const setup = async (adUnitId: string) => {
+            const adUnit = document.createElement("div");
+            adUnit.id = adUnitId;
+            document.body.appendChild(adUnit);
+
+            defineSlot({ template: "midscroll", adUnitId, sizes: [[970, 570]] });
+
+            const wrapperElement = getSlotConfig(adUnitId)!.wrapperElement!;
+            const wrapper = {
+                // Mirrors morphIntoFormat: reset any active format, then set
+                // the new one, all in the same tick.
+                forceFormat: jest.fn(async (format: string, ..._rest: any[]) => {
+                    if (wrapperElement.hasAttribute("current-format")) {
+                        wrapperElement.removeAttribute("current-format");
+                        wrapperElement.dispatchEvent(
+                            new CustomEvent("advantage:format-reset", {
+                                bubbles: true
+                            })
+                        );
+                    }
+                    wrapperElement.setAttribute("current-format", format);
+                }),
+                reset: jest.fn(),
+                querySelector: () => null
+            };
+            (wrapperElement as any).advantageWrapper = wrapper;
+
+            await initializeHighImpactJs();
+            const render = () =>
+                (window as any).highImpactJs._triggerSlotRendered({
+                    elementId: adUnitId,
+                    plugin: "test",
+                    adWrapper: wrapperElement,
+                    adUnit,
+                    size: [970, 570]
+                });
+            return { wrapper, wrapperElement, adUnit, render };
+        };
+
+        it("does not force midscroll when the creative asked first", async () => {
+            const { wrapper, wrapperElement, render } = await setup("creative-first");
+            wrapperElement.setAttribute("current-format", "DOUBLE_MIDSCROLL");
+
+            render();
+            await flush();
+
+            expect(wrapper.forceFormat).not.toHaveBeenCalled();
+            expect(wrapperElement.getAttribute("current-format")).toBe(
+                "DOUBLE_MIDSCROLL"
+            );
+        });
+
+        it("cleans up midscroll state when the creative switches format afterwards", async () => {
+            const { wrapper, wrapperElement, adUnit, render } =
+                await setup("render-first");
+
+            render();
+            await flush();
+            expect(wrapper.forceFormat).toHaveBeenCalledWith(
+                "MIDSCROLL",
+                undefined,
+                expect.anything()
+            );
+            expect(getSlotConfig("render-first")!.rendered).toBeTruthy();
+            expect(document.body.classList.contains("high-impact-ad-rendered")).toBe(
+                true
+            );
+
+            // Creative requests DOUBLE_MIDSCROLL: reset + new format, same tick.
+            await wrapper.forceFormat("DOUBLE_MIDSCROLL");
+            await flush();
+
+            expect(getSlotConfig("render-first")!.rendered).toBe(false);
+            expect(document.body.classList.contains("high-impact-ad-rendered")).toBe(
+                false
+            );
+            expect(
+                adUnit.classList.contains("high-impact-ad-unit-midscroll")
+            ).toBe(false);
+            expect(wrapperElement.getAttribute("current-format")).toBe(
+                "DOUBLE_MIDSCROLL"
+            );
+        });
+
+        it("keeps midscroll state when the wrapper is re-applied with the same format", async () => {
+            const { wrapper, render } = await setup("reapply");
+
+            render();
+            await flush();
+            await wrapper.forceFormat("MIDSCROLL");
+            await flush();
+
+            expect(getSlotConfig("reapply")!.rendered).toBeTruthy();
+            expect(document.body.classList.contains("high-impact-ad-rendered")).toBe(
+                true
+            );
         });
     });
 });
