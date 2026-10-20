@@ -128,7 +128,7 @@ describe("High Impact JS Compatibility Layer", () => {
             // Check that wrapper was created
             const wrapper = document.querySelector("advantage-wrapper");
             expect(wrapper).toBeTruthy();
-            expect(wrapper?.getAttribute("allowed-formats")).toBe("TOPSCROLL");
+            expect(wrapper?.hasAttribute("allowed-formats")).toBe(false);
         });
 
         it("should handle case when DOM element does not exist yet", () => {

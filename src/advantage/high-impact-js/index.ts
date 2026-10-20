@@ -645,9 +645,10 @@ const attemptPreWrap = (slotConfig: SlotConfig): boolean => {
         return false;
     }
 
-    // Get allowed formats for this template
-    const advantageFormat = TEMPLATE_TO_FORMAT_MAP[slotConfig.template];
-    if (!advantageFormat) {
+    // Only pre-wrap known templates. No allowed-formats attribute is set: the
+    // creative decides which format it requests, and rejecting it this late in
+    // the render lifecycle would leave the slot in a broken state.
+    if (!TEMPLATE_TO_FORMAT_MAP[slotConfig.template]) {
         logger.debug(
             `[High Impact Compatibility] Unknown template: ${slotConfig.template}, cannot pre-wrap`
         );
@@ -658,12 +659,6 @@ const attemptPreWrap = (slotConfig: SlotConfig): boolean => {
         // Create advantage wrapper
         const advantageWrapperElement =
             document.createElement("advantage-wrapper");
-
-        // Set allowed formats to restrict to only the configured template
-        advantageWrapperElement.setAttribute(
-            "allowed-formats",
-            advantageFormat
-        );
 
         // Create slot div
         const slotDiv = document.createElement("div");
