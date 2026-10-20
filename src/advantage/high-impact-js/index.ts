@@ -310,6 +310,35 @@ const observeWrapperForClose = (
     },
     appliedStyleProperties: string[]
 ): (() => void) => {
+    const ownFormat = config.template
+        ? TEMPLATE_TO_FORMAT_MAP[config.template]?.toUpperCase()
+        : undefined;
+    let cleanedUp = false;
+
+    const cleanup = () => {
+        if (cleanedUp) {
+            return;
+        }
+        cleanedUp = true;
+        observer.disconnect();
+        wrapperElement.removeEventListener("advantage:format-reset", onReset);
+        logger.debug(
+            `[High Impact Compatibility] Wrapper closed/reset for ${config.adUnitId}, cleaning up classes`
+        );
+        if (config.template) {
+            removeDivClasses(elements, config.template);
+            document.body.classList.remove("high-impact-ad-rendered");
+        }
+        if (config.rendered && config.rendered.cleanupTemplateSpecific) {
+            config.rendered.cleanupTemplateSpecific();
+        }
+        // Remove only the style properties that the compatibility layer added
+        for (const prop of appliedStyleProperties) {
+            wrapperElement.style.removeProperty(prop);
+        }
+        config.rendered = false;
+    };
+
     const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
             if (
@@ -317,33 +346,49 @@ const observeWrapperForClose = (
                 mutation.attributeName === "current-format" &&
                 !wrapperElement.hasAttribute("current-format")
             ) {
-                logger.debug(
-                    `[High Impact Compatibility] Wrapper closed/reset for ${config.adUnitId}, cleaning up classes`
-                );
-                if (config.template) {
-                    removeDivClasses(elements, config.template);
-                    document.body.classList.remove("high-impact-ad-rendered");
-                }
-                if (config.rendered?.cleanupTemplateSpecific) {
-                    config.rendered.cleanupTemplateSpecific();
-                }
-                // Remove only the style properties that the compatibility layer added
-                for (const prop of appliedStyleProperties) {
-                    wrapperElement.style.removeProperty(prop);
-                }
-                config.rendered = false;
-                observer.disconnect();
+                cleanup();
+                return;
             }
         }
     });
+
+    // A reset that is immediately followed by another format (a creative
+    // switching format, or a re-apply) changes `current-format` within the
+    // same tick, so the observer above never sees it missing. The reset event
+    // fires synchronously, and the follow-up format is set before the
+    // microtask runs, so clean up unless the wrapper is back in our format.
+    const onReset = (event: Event) => {
+        if (event.target !== wrapperElement) {
+            return;
+        }
+        queueMicrotask(() => {
+            const current = wrapperElement
+                .getAttribute("current-format")
+                ?.toUpperCase();
+            if (!current || current !== ownFormat) {
+                cleanup();
+            }
+        });
+    };
 
     observer.observe(wrapperElement, {
         attributes: true,
         attributeFilter: ["current-format"]
     });
+    wrapperElement.addEventListener("advantage:format-reset", onReset);
 
-    return () => observer.disconnect();
+    return () => {
+        observer.disconnect();
+        wrapperElement.removeEventListener("advantage:format-reset", onReset);
+    };
 };
+
+/**
+ * True if the wrapper already has an active format, i.e. the creative
+ * requested one before the slot-rendered event reached us.
+ */
+const hasChosenFormat = (wrapperElement?: HTMLElement | null): boolean =>
+    !!wrapperElement?.hasAttribute?.("current-format");
 
 /**
  * Handles when an ad slot is rendered
@@ -574,7 +619,11 @@ const onAdSlotRendered = (options: {
             // Wait for the custom element to be defined and upgraded
             customElements.whenDefined("advantage-wrapper").then(() => {
                 wrapper = (advantageWrapperElement as any).advantageWrapper;
-                if (wrapper) {
+                if (wrapper && hasChosenFormat(advantageWrapperElement)) {
+                    logger.debug(
+                        `[High Impact Compatibility] ${elementId} already has a format - not forcing ${advantageFormat}`
+                    );
+                } else if (wrapper) {
                     wrapper
                         .forceFormat(advantageFormat, adIframe, formatOptions)
                         .then(() =>
@@ -589,6 +638,14 @@ const onAdSlotRendered = (options: {
             });
         } else {
             const wrapperEl = config.wrapperElement || advantageWrapperElement;
+            // The creative may already have requested its own format (e.g.
+            // DOUBLE_MIDSCROLL in a midscroll slot). Don't override it.
+            if (hasChosenFormat(wrapperEl)) {
+                logger.debug(
+                    `[High Impact Compatibility] ${elementId} already has a format - not forcing ${advantageFormat}`
+                );
+                return;
+            }
             wrapper
                 .forceFormat(advantageFormat, adIframe, formatOptions)
                 .then(() => onFormatApplied(wrapper, wrapperEl))
