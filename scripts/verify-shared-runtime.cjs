@@ -17,6 +17,8 @@ async function verify(first, second, ready) {
         if (ready) await new Promise((resolve) => w.addEventListener("load", resolve));
         let compatibilityCommands = 0;
         w.highImpactJs = { cmd: [
+            // Queued commands may use the UMD global, as publishers do.
+            () => { w.advantage.Advantage.getInstance(); compatibilityCommands++; },
             async () => { compatibilityCommands++; await Promise.resolve(); },
             () => compatibilityCommands++
         ] };
@@ -88,12 +90,12 @@ async function verify(first, second, ready) {
         // Let both preloaded compatibility commands finish, including the
         // command after the async one, without replay during duplicate loads.
         await new Promise((resolve) => w.setTimeout(resolve, 0));
-        assert.equal(compatibilityCommands, compatibility ? 2 : 0);
+        assert.equal(compatibilityCommands, compatibility ? 3 : 0);
         const listenersBefore = messageListeners;
         w.eval(second);
         assert.equal(messageListeners, listenersBefore, "reloading installs no message listeners");
         assert.equal(commands, 3);
-        assert.equal(compatibilityCommands, compatibility ? 2 : 0);
+        assert.equal(compatibilityCommands, compatibility ? 3 : 0);
         assert.equal(w.document.querySelectorAll("advantage-wrapper").length, 1);
 
         // A later incompatible release must fail before overwriting globals.

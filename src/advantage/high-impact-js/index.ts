@@ -1183,8 +1183,14 @@ const listenToHighImpactPostMessages = (handler: (options: any) => void) => {
 
 /**
  * Initialize the High Impact JS compatibility layer
+ *
+ * @param options.deferQueuedCommands - Run commands queued before load after
+ * the bundle has finished evaluating, so they can use the UMD global
+ * (window.advantage). Set by the auto-init that runs during bundle load.
  */
-export const initializeHighImpactJs = async (): Promise<void> => {
+export const initializeHighImpactJs = async ({
+    deferQueuedCommands = false
+}: { deferQueuedCommands?: boolean } = {}): Promise<void> => {
     if (state.initialized) {
         logger.debug("[High Impact Compatibility] Already initialized");
         return;
@@ -1217,6 +1223,12 @@ export const initializeHighImpactJs = async (): Promise<void> => {
         ? highImpactJs.cmd.splice(0)
         : [];
     highImpactJs.cmd = cmd;
+    // Auto-init runs while the bundle is still evaluating, so the UMD global
+    // (window.advantage) is not populated yet. Yield once so queued commands
+    // can use it, as they can when pushed after the bundle has loaded.
+    if (deferQueuedCommands) {
+        await Promise.resolve();
+    }
     for (const item of pendingCommands) {
         if (typeof item === "function") {
             await item();

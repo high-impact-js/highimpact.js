@@ -88,7 +88,7 @@ if (typeof window !== "undefined" && !installation.installed) {
         logger.debug(
             "Detected window.highImpactJs - auto-initializing High Impact JS compatibility"
         );
-        initializeHighImpactJs().catch((error) => {
+        initializeHighImpactJs({ deferQueuedCommands: true }).catch((error) => {
             logger.error(
                 "Failed to auto-initialize High Impact JS compatibility:",
                 error
