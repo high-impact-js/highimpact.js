@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.3](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.2...hijs-v0.14.3) (2026-10-21)
+
+
+### Bug Fixes
+
+* let pre-load highImpactJs.cmd commands use the UMD global ([#26](https://github.com/high-impact-js/highimpact.js/issues/26)) ([9c64b47](https://github.com/high-impact-js/highimpact.js/commit/9c64b47e3e43353abae636c1f28822c4dfb242f0))
+
 ## [0.14.2](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.1...hijs-v0.14.2) (2026-10-20)
 
 
