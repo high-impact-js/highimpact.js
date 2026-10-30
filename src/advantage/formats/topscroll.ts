@@ -17,14 +17,14 @@ const DEFAULT_HEIGHT = 80;
  * Handles the scroll behavior when the down arrow is clicked
  * @param height - The configured height of the ad (in vh percentage)
  */
-const handleDownArrowClick = (height?: number) => {
+const handleDownArrowClick = (height?: number, topBarHeight = 0) => {
     logger.debug("Down arrow clicked");
     const scrollHeight =
         height && height <= 100
             ? window.innerHeight * (height / 100)
             : window.innerHeight * (DEFAULT_HEIGHT / 100);
     window.scrollBy({
-        top: scrollHeight,
+        top: scrollHeight - topBarHeight,
         behavior: "smooth"
     });
 };
@@ -58,7 +58,9 @@ export const topscroll: AdvantageFormat = {
             if (config.height && config.height <= 100) {
                 wrapper.style.setProperty(
                     "--adv-topscroll-height",
-                    `${config.height}svh`
+                    config.topBarHeight
+                        ? `calc(${config.height}svh - ${config.topBarHeight}px)`
+                        : `${config.height}svh`
                 );
             }
 
@@ -84,7 +86,7 @@ export const topscroll: AdvantageFormat = {
                 const downArrow = document.createElement("div");
                 downArrow.id = "down-arrow";
                 downArrow.addEventListener("click", () =>
-                    handleDownArrowClick(config.height)
+                    handleDownArrowClick(config.height, config.topBarHeight)
                 );
                 uiContainer.appendChild(downArrow);
             }

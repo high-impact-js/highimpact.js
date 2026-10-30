@@ -149,6 +149,15 @@ const convertTemplateConfigToFormatOptions = (
         options.zIndex = zIndex;
     }
 
+    // An explicit 0 in the template config overrides the global value
+    const topBarHeight =
+        templateConfig.topBarHeight !== undefined
+            ? templateConfig.topBarHeight
+            : _globalConfig.topBarHeight;
+    if (topBarHeight !== undefined) {
+        options.topBarHeight = topBarHeight;
+    }
+
     return options;
 };
 
@@ -1262,13 +1271,12 @@ export const getFormatOptionsForFormat = (
     const template = Object.keys(TEMPLATE_TO_FORMAT_MAP).find(
         (name) => TEMPLATE_TO_FORMAT_MAP[name] === formatName
     );
-    const templateConfig = template && state.templateConfig[template];
-    if (!template || !templateConfig) {
+    if (!template) {
         return undefined;
     }
     return convertTemplateConfigToFormatOptions(
         template,
-        templateConfig,
+        getTemplateConfig(template),
         getConfig()
     );
 };

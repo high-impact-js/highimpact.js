@@ -68,6 +68,13 @@ export function createMultiMidscroll(
                 wrapper.insertCSS(`:host { --adv-midscroll-multiplier: ${multiplier}; } ${styles}`);
                 setDimensionsUntilAdvantageAdSlot(ad, false);
 
+                if (config.topBarHeight) {
+                    wrapper.style.setProperty(
+                        "--adv-top-bar",
+                        `${config.topBarHeight}px`
+                    );
+                }
+
                 const backgroundURL = new URL(config.backgroundAdURL);
                 backgroundURL.searchParams.set("sessionId", config.sessionID);
                 const background = document.createElement("div");
@@ -90,6 +97,7 @@ export function createMultiMidscroll(
         reset: (wrapper, ad?) => {
             resetDimensionsUntilAdvantageAdSlot(ad, false);
             wrapper.resetCSS();
+            wrapper.style.removeProperty("--adv-top-bar");
             wrapper.shadowRoot
                 ?.getElementById("ad-slot")
                 ?.querySelector("#advantage-ad-background")

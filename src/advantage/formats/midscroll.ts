@@ -23,6 +23,13 @@ export const midscroll: AdvantageFormat = {
                 );
             }
 
+            if (options?.topBarHeight) {
+                wrapper.style.setProperty(
+                    "--adv-top-bar",
+                    `${options.topBarHeight}px`
+                );
+            }
+
             const uiContainer = document.createElement("div");
             uiContainer.id = "ui-container";
 
@@ -37,10 +44,12 @@ export const midscroll: AdvantageFormat = {
         }
         wrapper.resetCSS();
         wrapper.style.removeProperty("--adv-midscroll-height");
+        wrapper.style.removeProperty("--adv-top-bar");
     },
     close: (wrapper) => {
         wrapper.animateClose(() => {
             wrapper.style.removeProperty("--adv-midscroll-height");
+            wrapper.style.removeProperty("--adv-top-bar");
         });
     }
 };
