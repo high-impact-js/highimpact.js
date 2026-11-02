@@ -212,17 +212,18 @@ describe("High Impact JS Compatibility Layer", () => {
         it("should pass topBarHeight from template config, falling back to global config", () => {
             setConfig({ topBarHeight: 60 });
             setTemplateConfig("midscroll", { topBarHeight: 56 });
-            setTemplateConfig("topscroll", { topBarHeight: 0 });
 
             expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual(
                 expect.objectContaining({ topBarHeight: 56 })
             );
             expect(getFormatOptionsForFormat("TOPSCROLL")).toEqual(
+                expect.objectContaining({ topBarHeight: 60 })
+            );
+
+            setTemplateConfig("midscroll", { topBarHeight: 0 });
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual(
                 expect.objectContaining({ topBarHeight: 0 })
             );
-            expect(getFormatOptionsForFormat("DOUBLE_MIDSCROLL")).toEqual({
-                topBarHeight: 60
-            });
         });
 
         // Pre-wraps a slot and stubs the wrapper instance the custom element

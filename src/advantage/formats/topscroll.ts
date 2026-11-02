@@ -7,7 +7,8 @@ import topscrollCSS from "./topscroll.css?inline";
 import topscrollUICSS from "./topscroll-ui.css?inline";
 import {
     setDimensionsUntilAdvantageAdSlot,
-    resetDimensionsUntilAdvantageAdSlot
+    resetDimensionsUntilAdvantageAdSlot,
+    getTopBarHeight
 } from "./format-helper";
 import logger from "../../utils/logging";
 
@@ -55,14 +56,15 @@ export const topscroll: AdvantageFormat = {
             const uiContainer = document.createElement("div");
             uiContainer.id = "ui-container";
 
-            if (config.height && config.height <= 100) {
-                wrapper.style.setProperty(
-                    "--adv-topscroll-height",
-                    config.topBarHeight
-                        ? `calc(${config.height}svh - ${config.topBarHeight}px)`
-                        : `${config.height}svh`
-                );
-            }
+            const height =
+                config.height && config.height <= 100
+                    ? config.height
+                    : DEFAULT_HEIGHT;
+            const topBarHeight = getTopBarHeight(config);
+            wrapper.style.setProperty(
+                "--adv-topscroll-height",
+                `calc(${height}svh - ${topBarHeight}px)`
+            );
 
             if (config?.closeButton) {
                 const closeBtn = document.createElement("div");
@@ -86,7 +88,7 @@ export const topscroll: AdvantageFormat = {
                 const downArrow = document.createElement("div");
                 downArrow.id = "down-arrow";
                 downArrow.addEventListener("click", () =>
-                    handleDownArrowClick(config.height, config.topBarHeight)
+                    handleDownArrowClick(height, topBarHeight)
                 );
                 uiContainer.appendChild(downArrow);
             }

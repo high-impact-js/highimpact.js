@@ -9,8 +9,8 @@
 ::slotted([slot="advantage-ad-slot"]) {
     position: sticky;
     width: 100dvw;
-    height: calc(100dvh - var(--adv-top-bar, 0px));
-    top: var(--adv-top-bar, 0px);
+    height: 100dvh;
+    top: 0;
     left: 0;
     z-index: var(--adv-wp-zindex);
     transition: all 0.5s ease;

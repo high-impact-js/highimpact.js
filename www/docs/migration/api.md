@@ -101,12 +101,12 @@ highImpactJs.setTemplateConfig("topscroll", {
 
 ### TemplateConfig
 
-| Property          | Type      | Templates                               | Description                                                                                                                                              |
-| :---------------- | :-------- | :-------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `peekAmount`      | `string`  | topscroll, midscroll                    | How much of the viewport the format occupies, e.g. `"80vh"` or `"70%"`.                                                                                  |
-| `fadeOnScroll`    | `boolean` | topscroll                               | Whether the ad fades as the user scrolls past it.                                                                                                        |
-| `topBarHeight`    | `number`  | topscroll, midscroll, double-fullscreen | Height in pixels of a fixed top bar. Topscroll and midscroll get shorter by this amount, and midscroll and double-fullscreen keep the ad below the bar. Overrides the global `topBarHeight`. |
-| `zIndex`          | `number`  | all                                     | CSS z-index applied to the wrapper element.                                                                                                              |
+| Property       | Type      | Templates            | Description                                                                                                                                                                                                    |
+| :------------- | :-------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `peekAmount`   | `string`  | topscroll, midscroll | How much of the viewport the format occupies, e.g. `"80vh"` or `"70%"`.                                                                                                                                        |
+| `fadeOnScroll` | `boolean` | topscroll            | Whether the ad fades as the user scrolls past it.                                                                                                                                                              |
+| `topBarHeight` | `number`  | topscroll, midscroll | Height in pixels of the site's top bar. Topscroll gets this much shorter so the bar below it is visible. Midscroll gets this much shorter and keeps the ad below the bar. Overrides the global `topBarHeight`. |
+| `zIndex`       | `number`  | all                  | CSS z-index applied to the wrapper element.                                                                                                                                                                    |
 
 ---
 
