@@ -218,6 +218,10 @@ Yes. The post-message protocol is fully supported.
 
 It is recommended to move the layout elements and styling to the new format integration, `formatIntegrations`. However, if you wish to continue with the same styling as before, extract the HTML and styling and apply it on `advantage:format-start` instead.
 
+### My centered banner now sits at the left edge. Why?
+
+`<advantage-wrapper>` fills the width of its container, so a parent that centers its children with flex or grid alignment no longer centers the banner inside it. See [Wrapper → Layout](../concepts/wrapper.md#layout) for a rule that centers regular banners without affecting high-impact formats.
+
 ### I use Xandr instead of GAM. Does that work?
 
 Yes. Set the plugin in your global config:

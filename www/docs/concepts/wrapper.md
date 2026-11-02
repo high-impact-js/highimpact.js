@@ -14,6 +14,21 @@ It's designed to securely and efficiently load the designated [format](formats.m
   ℹ️ Using the Advantage Wrapper is highly recommended as it makes implementing Advantage high-impact formats on your website quick and easy. But if you already have custom implementations of the formats that you want, you can choose not to use the wrapper.
 </div>
 
+## Layout
+
+The wrapper is `display: block` and fills the width of its container (`width: 100%; box-sizing: border-box`). This stops it from collapsing to 0px in flex or grid layouts that would otherwise shrink it to its content. Formats set their own size on top of this, for example `100vw` for midscroll.
+
+If you center a narrower banner with flex or grid alignment (`align-items: center`, `justify-content: center`, `justify-items: center`), the wrapper fills the row or column, so the banner sits at the left edge. To keep regular banners centered, center the ad element inside the wrapper while no format is active:
+
+```css
+advantage-wrapper:not([current-format]) > [slot="advantage-ad-slot"] {
+    width: fit-content;
+    margin-inline: auto;
+}
+```
+
+Scope rules like this with `:not([current-format])`. Page styles on the wrapper and its ad element override the wrapper's built-in styles, including the sizes that high-impact formats set, so an unscoped `width` rule can break those formats.
+
 ## Force Format
 
 The wrapper provides a `forceFormat` method that allows publishers to directly control which ad format to display without waiting for communication from the ad iframe. This is useful when you want to programmatically trigger a specific format based on your own logic or conditions.
