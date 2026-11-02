@@ -128,8 +128,19 @@ describe("wrapper base host styles", () => {
         document.body.innerHTML = "";
     });
 
-    it("gives the wrapper a block display and full width by default", () => {
-        expect(shadowCSS(createWrapper())).toMatch(/:host\s*\{\s*display:\s*block;\s*width:\s*100%;?\s*\}/);
+    it("gives the wrapper a block display and full border-box width by default", () => {
+        expect(shadowCSS(createWrapper())).toMatch(
+            /:host\s*\{\s*display:\s*block;\s*width:\s*100%;\s*box-sizing:\s*border-box;?\s*\}/
+        );
+    });
+
+    it("places format CSS after the base rule so formats can override its width", () => {
+        const wrapper = createWrapper();
+        wrapper.insertCSS(":host { width: 100vw; }");
+        const css = shadowCSS(wrapper);
+        const baseIndex = css.search(/width:\s*100%/);
+        expect(baseIndex).toBeGreaterThanOrEqual(0);
+        expect(css.search(/width:\s*100vw/)).toBeGreaterThan(baseIndex);
     });
 
     it("keeps the base styles when format CSS is inserted and reset", () => {

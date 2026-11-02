@@ -26,7 +26,7 @@ import { AdvantageAdSlotResponder } from "./messaging/publisher-side";
 // Always-present host styles. Custom elements default to display: inline with
 // no intrinsic width, so inside e.g. a flex container with align-items: center
 // the wrapper collapses to 0px. Format CSS comes after this and can override it.
-const BASE_HOST_CSS = ":host{display:block;width:100%}";
+const BASE_HOST_CSS = ":host{display:block;width:100%;box-sizing:border-box}";
 
 /**
  * Represents the AdvantageWrapper class, which extends the HTMLElement class and implements the IAdvantageWrapper interface.
