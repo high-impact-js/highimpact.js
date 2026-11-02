@@ -13,8 +13,14 @@
     "type": "module",
     "files": [
         "dist",
-        "www"
+        "www",
+        "ai",
+        "skills",
+        "bin/highimpact.cjs"
     ],
+    "bin": {
+        "highimpact.js": "bin/highimpact.cjs"
+    },
     "main": "./dist/advantage/index.cjs",
     "module": "./dist/advantage/index.js",
     "types": "./dist/advantage/index.d.ts",
@@ -73,7 +79,8 @@
         "verify:legacy-creative": "node scripts/verify-legacy-creative.cjs",
         "preview": "vite preview",
         "docs:dev": "vitepress dev",
-        "docs:build": "typedoc && vitepress build",
+        "docs:api": "typedoc",
+        "docs:build": "npm run docs:api && vitepress build",
         "docs:preview": "vitepress preview",
         "test": "jest",
         "test:package": "node scripts/test-package.cjs",
@@ -81,7 +88,7 @@
         "release": "dotenv release-it --",
         "release:next": "dotenv release-it -- --preRelease=next",
         "generate-formats-json": "node scripts/generate-formats-json.cjs",
-        "postbuild": "npm run generate-formats-json"
+        "postbuild": "npm run generate-formats-json && npm run docs:api"
     },
     "devDependencies": {
         "@release-it/conventional-changelog": "^8.0.1",
