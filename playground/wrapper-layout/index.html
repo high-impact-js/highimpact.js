@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Wrapper layout check</title>
+        <style>
+            body {
+                margin: 0;
+                font: 14px/1.4 system-ui, sans-serif;
+            }
+            h2 {
+                margin: 24px 16px 8px;
+                font-size: 15px;
+            }
+            .case {
+                width: 700px;
+                margin: 0 16px;
+                outline: 1px dashed #999;
+                min-height: 260px;
+            }
+            .flex-col-center {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+            }
+            .flex-row-center {
+                display: flex;
+                justify-content: center;
+            }
+            .block-text-center {
+                text-align: center;
+            }
+            .grid-center {
+                display: grid;
+                justify-items: center;
+            }
+            .banner {
+                display: block;
+                width: 300px;
+                height: 250px;
+                border: 0;
+            }
+            .interscroller {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                visibility: hidden;
+            }
+            #results {
+                margin: 24px 16px;
+                border-collapse: collapse;
+            }
+            #results td,
+            #results th {
+                border: 1px solid #ccc;
+                padding: 4px 8px;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <!--
+            Each case puts an <advantage-wrapper> with no format applied (a slot
+            that served an ordinary banner) into a different parent layout.
+            The script measures where the 300x250 banner lands.
+        -->
+        <h2>flex column + align-items:center (Politiken, issue #28)</h2>
+        <div class="case flex-col-center" data-case="flex-col-center">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <iframe class="banner" srcdoc="<body style='margin:0;background:#4a90d9'></body>"></iframe>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <h2>flex row + justify-content:center</h2>
+        <div class="case flex-row-center" data-case="flex-row-center">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <iframe class="banner" srcdoc="<body style='margin:0;background:#4a90d9'></body>"></iframe>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <h2>block + text-align:center</h2>
+        <div class="case block-text-center" data-case="block-text-center">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <iframe class="banner" style="display: inline-block" srcdoc="<body style='margin:0;background:#4a90d9'></body>"></iframe>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <h2>grid + justify-items:center</h2>
+        <div class="case grid-center" data-case="grid-center">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <iframe class="banner" srcdoc="<body style='margin:0;background:#4a90d9'></body>"></iframe>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <h2>plain block (control)</h2>
+        <div class="case" data-case="block-plain">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <iframe class="banner" srcdoc="<body style='margin:0;background:#4a90d9'></body>"></iframe>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <h2>flex column + align-items:center, fixed-position interscroller (issue #28 bug)</h2>
+        <div class="case flex-col-center" data-case="interscroller">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot">
+                    <div class="interscroller"></div>
+                </div>
+            </advantage-wrapper>
+        </div>
+
+        <table id="results">
+            <thead>
+                <tr>
+                    <th>case</th>
+                    <th>wrapper width</th>
+                    <th>banner left offset</th>
+                    <th>centered</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <script type="module" src="./index.ts"></script>
+    </body>
+</html>
