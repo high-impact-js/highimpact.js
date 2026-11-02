@@ -23,6 +23,11 @@ import {
 
 import { AdvantageAdSlotResponder } from "./messaging/publisher-side";
 
+// Always-present host styles. Custom elements default to display: inline with
+// no intrinsic width, so inside e.g. a flex container with align-items: center
+// the wrapper collapses to 0px. Format CSS comes after this and can override it.
+const BASE_HOST_CSS = ":host{display:block;width:100%}";
+
 /**
  * Represents the AdvantageWrapper class, which extends the HTMLElement class and implements the IAdvantageWrapper interface.
  * This class is responsible for creating and managing the wrapper element for Advantage ads.
@@ -77,6 +82,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
         } else {
             this.#root.appendChild(this.#styleSheet as HTMLStyleElement);
         }
+        this.resetCSS();
 
         // Create the container div
         this.container = document.createElement("div");
@@ -657,6 +663,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
      * @param CSS - The CSS to insert.
      */
     insertCSS(CSS: string) {
+        CSS = BASE_HOST_CSS + CSS;
         try {
             if (supportsAdoptingStyleSheets) {
                 (this.#styleSheet as CSSStyleSheet).replaceSync(CSS);
@@ -700,11 +707,7 @@ export class AdvantageWrapper extends HTMLElement implements IAdvantageWrapper {
      * Resets the CSS in the shadow root of the wrapper.
      */
     resetCSS() {
-        if (supportsAdoptingStyleSheets) {
-            (this.#styleSheet as CSSStyleSheet).replaceSync("");
-        } else {
-            (this.#styleSheet as HTMLStyleElement).textContent = "";
-        }
+        this.insertCSS("");
     }
 
     /**

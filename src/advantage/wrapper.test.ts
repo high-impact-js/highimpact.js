@@ -113,3 +113,32 @@ describe("active wrapper lifecycle configuration", () => {
         );
     });
 });
+
+describe("wrapper base host styles", () => {
+    const shadowCSS = (wrapper: IAdvantageWrapper) => {
+        const root = wrapper.shadowRoot!;
+        const adopted = (root.adoptedStyleSheets ?? []).flatMap((sheet) =>
+            Array.from(sheet.cssRules, (rule) => rule.cssText)
+        );
+        const inline = Array.from(root.querySelectorAll("style"), (el) => el.textContent ?? "");
+        return [...adopted, ...inline].join("\n");
+    };
+
+    beforeEach(() => {
+        document.body.innerHTML = "";
+    });
+
+    it("gives the wrapper a block display and full width by default", () => {
+        expect(shadowCSS(createWrapper())).toMatch(/:host\s*\{\s*display:\s*block;\s*width:\s*100%;?\s*\}/);
+    });
+
+    it("keeps the base styles when format CSS is inserted and reset", () => {
+        const wrapper = createWrapper();
+        wrapper.insertCSS(":host { height: 50px; }");
+        expect(shadowCSS(wrapper)).toMatch(/width:\s*100%/);
+        expect(shadowCSS(wrapper)).toMatch(/height:\s*50px/);
+        wrapper.resetCSS();
+        expect(shadowCSS(wrapper)).toMatch(/width:\s*100%/);
+        expect(shadowCSS(wrapper)).not.toMatch(/height:\s*50px/);
+    });
+});
