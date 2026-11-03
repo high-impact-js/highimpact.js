@@ -85,6 +85,26 @@ That's it. highimpact.js handles format negotiation, creative communication, and
 
 Read the full [documentation](https://gethighimpact.org) for configuration options, format guides, and advanced usage.
 
+### Using coding agents
+
+Each release ships its documentation, API reference, and agent skills inside the package, so agents can read the docs for the version you have installed. To opt in, add a pointer to your `AGENTS.md`:
+
+```bash
+npx highimpact.js setup-ai            # or --claude for CLAUDE.md, --remove to undo
+```
+
+Then install the skill for your role:
+
+```bash
+# Publisher: site integration, wrapper, formats, ad servers
+npx skills add ./node_modules/highimpact.js/skills/highimpact-publisher
+
+# Creative: creative messaging and format requests
+npx skills add ./node_modules/highimpact.js/skills/highimpact-creative
+```
+
+Installing from `./node_modules` gives you the skill from your installed release; `npx skills add high-impact-js/highimpact.js --skill <name>` gives you the latest one from GitHub. Skills are not updated when you upgrade the npm package. See [AI Tools](https://gethighimpact.org/docs/ai-tools) for details.
+
 ---
 
 ## Contributing
