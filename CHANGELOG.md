@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.4](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.3...hijs-v0.14.4) (2026-11-03)
+
+
+### Bug Fixes
+
+* give advantage-wrapper a block display and full width by default ([#30](https://github.com/high-impact-js/highimpact.js/issues/30)) ([bba3e60](https://github.com/high-impact-js/highimpact.js/commit/bba3e60e37807b0cd6ea51021b19bf5c46c69f82)), closes [#28](https://github.com/high-impact-js/highimpact.js/issues/28)
+* honour topBarHeight from template and global config ([#27](https://github.com/high-impact-js/highimpact.js/issues/27)) ([48e1409](https://github.com/high-impact-js/highimpact.js/commit/48e1409a085a0bec2d0ea67d259be20a60d05ab7))
+
 ## [0.14.3](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.2...hijs-v0.14.3) (2026-10-21)
 
 
