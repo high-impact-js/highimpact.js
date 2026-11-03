@@ -7,7 +7,8 @@ import topscrollCSS from "./topscroll.css?inline";
 import topscrollUICSS from "./topscroll-ui.css?inline";
 import {
     setDimensionsUntilAdvantageAdSlot,
-    resetDimensionsUntilAdvantageAdSlot
+    resetDimensionsUntilAdvantageAdSlot,
+    getTopBarHeight
 } from "./format-helper";
 import logger from "../../utils/logging";
 
@@ -17,14 +18,14 @@ const DEFAULT_HEIGHT = 80;
  * Handles the scroll behavior when the down arrow is clicked
  * @param height - The configured height of the ad (in vh percentage)
  */
-const handleDownArrowClick = (height?: number) => {
+const handleDownArrowClick = (height?: number, topBarHeight = 0) => {
     logger.debug("Down arrow clicked");
     const scrollHeight =
         height && height <= 100
             ? window.innerHeight * (height / 100)
             : window.innerHeight * (DEFAULT_HEIGHT / 100);
     window.scrollBy({
-        top: scrollHeight,
+        top: scrollHeight - topBarHeight,
         behavior: "smooth"
     });
 };
@@ -55,12 +56,15 @@ export const topscroll: AdvantageFormat = {
             const uiContainer = document.createElement("div");
             uiContainer.id = "ui-container";
 
-            if (config.height && config.height <= 100) {
-                wrapper.style.setProperty(
-                    "--adv-topscroll-height",
-                    `${config.height}svh`
-                );
-            }
+            const height =
+                config.height && config.height <= 100
+                    ? config.height
+                    : DEFAULT_HEIGHT;
+            const topBarHeight = getTopBarHeight(config);
+            wrapper.style.setProperty(
+                "--adv-topscroll-height",
+                `calc(${height}svh - ${topBarHeight}px)`
+            );
 
             if (config?.closeButton) {
                 const closeBtn = document.createElement("div");
@@ -84,7 +88,7 @@ export const topscroll: AdvantageFormat = {
                 const downArrow = document.createElement("div");
                 downArrow.id = "down-arrow";
                 downArrow.addEventListener("click", () =>
-                    handleDownArrowClick(config.height)
+                    handleDownArrowClick(height, topBarHeight)
                 );
                 uiContainer.appendChild(downArrow);
             }

@@ -2,7 +2,8 @@ import { AdvantageFormat, AdvantageFormatName } from "../../types";
 import styles from "./midscroll.css?inline";
 import {
     setDimensionsUntilAdvantageAdSlot,
-    resetDimensionsUntilAdvantageAdSlot
+    resetDimensionsUntilAdvantageAdSlot,
+    getTopBarHeight
 } from "./format-helper";
 
 export const midscroll: AdvantageFormat = {
@@ -23,6 +24,11 @@ export const midscroll: AdvantageFormat = {
                 );
             }
 
+            wrapper.style.setProperty(
+                "--adv-top-bar",
+                `${getTopBarHeight(options)}px`
+            );
+
             const uiContainer = document.createElement("div");
             uiContainer.id = "ui-container";
 
@@ -37,10 +43,12 @@ export const midscroll: AdvantageFormat = {
         }
         wrapper.resetCSS();
         wrapper.style.removeProperty("--adv-midscroll-height");
+        wrapper.style.removeProperty("--adv-top-bar");
     },
     close: (wrapper) => {
         wrapper.animateClose(() => {
             wrapper.style.removeProperty("--adv-midscroll-height");
+            wrapper.style.removeProperty("--adv-top-bar");
         });
     }
 };

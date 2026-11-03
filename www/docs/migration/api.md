@@ -101,11 +101,12 @@ highImpactJs.setTemplateConfig("topscroll", {
 
 ### TemplateConfig
 
-| Property          | Type      | Templates            | Description                                                                     |
-| :---------------- | :-------- | :------------------- | :------------------------------------------------------------------------------ |
-| `peekAmount`      | `string`  | topscroll, midscroll | How much of the viewport the format occupies, e.g. `"80vh"` or `"70%"`.         |
-| `fadeOnScroll`    | `boolean` | topscroll            | Whether the ad fades as the user scrolls past it.                               |
-| `zIndex`          | `number`  | all                  | CSS z-index applied to the wrapper element.                                     |
+| Property       | Type      | Templates            | Description                                                                                                                                                                                                    |
+| :------------- | :-------- | :------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `peekAmount`   | `string`  | topscroll, midscroll | How much of the viewport the format occupies, e.g. `"80vh"` or `"70%"`.                                                                                                                                        |
+| `fadeOnScroll` | `boolean` | topscroll            | Whether the ad fades as the user scrolls past it.                                                                                                                                                              |
+| `topBarHeight` | `number`  | topscroll, midscroll | Height in pixels of the site's top bar. Topscroll gets this much shorter so the bar below it is visible. Midscroll gets this much shorter and keeps the ad below the bar. Overrides the global `topBarHeight`. |
+| `zIndex`       | `number`  | all                  | CSS z-index applied to the wrapper element.                                                                                                                                                                    |
 
 ---
 
@@ -126,7 +127,7 @@ highImpactJs.setConfig({
 | :---------------- | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `plugins`         | `string[]`                  | Ad server plugins to use: `"gam"` (Google Ad Manager) and/or `"xandr"`. Default: `["gam", "xandr"]`.                                                   |
 | `zIndex`          | `number`                    | Default z-index for all format wrappers. Can be overridden per template.                                                                               |
-| `topBarHeight`    | `number`                    | Height in pixels of any fixed top navigation bar on the page.                                                                                          |
+| `topBarHeight`    | `number`                    | Height in pixels of any fixed top navigation bar on the page. Can be overridden per template.                                                          |
 | `bottomBarHeight` | `number`                    | Height in pixels of any fixed bottom navigation bar.                                                                                                   |
 | `ignoreSlotOn`    | `(html: string) => boolean` | A callback that receives the ad's HTML content. Return `true` to prevent the format from activating (e.g., to filter out blank or fallback creatives). |
 

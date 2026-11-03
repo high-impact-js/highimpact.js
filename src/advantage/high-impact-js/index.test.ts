@@ -195,7 +195,7 @@ describe("High Impact JS Compatibility Layer", () => {
         });
 
         it("should expose template config as format options for the mapped format", () => {
-            expect(getFormatOptionsForFormat("MIDSCROLL")).toBeUndefined();
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual({});
 
             setTemplateConfig("midscroll", { peekAmount: "80vh" });
             setTemplateConfig("topscroll", { peekAmount: "70vh", title: "Annonce" });
@@ -207,6 +207,23 @@ describe("High Impact JS Compatibility Layer", () => {
                 expect.objectContaining({ height: 70, closeButtonText: "Annonce" })
             );
             expect(getFormatOptionsForFormat("WELCOME_PAGE")).toBeUndefined();
+        });
+
+        it("should pass topBarHeight from template config, falling back to global config", () => {
+            setConfig({ topBarHeight: 60 });
+            setTemplateConfig("midscroll", { topBarHeight: 56 });
+
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual(
+                expect.objectContaining({ topBarHeight: 56 })
+            );
+            expect(getFormatOptionsForFormat("TOPSCROLL")).toEqual(
+                expect.objectContaining({ topBarHeight: 60 })
+            );
+
+            setTemplateConfig("midscroll", { topBarHeight: 0 });
+            expect(getFormatOptionsForFormat("MIDSCROLL")).toEqual(
+                expect.objectContaining({ topBarHeight: 0 })
+            );
         });
 
         // Pre-wraps a slot and stubs the wrapper instance the custom element

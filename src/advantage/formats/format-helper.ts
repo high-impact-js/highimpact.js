@@ -1,3 +1,5 @@
+import type { AdvantageFormatOptions } from "../../types";
+
 export function setDimensionsUntilAdvantageAdSlot(
     ad?: HTMLElement,
     inclusive: boolean = true
@@ -83,3 +85,6 @@ export function createIframe(
     iframe.setAttribute("scrolling", "no");
     return iframe;
 }
+
+export const getTopBarHeight = (options?: AdvantageFormatOptions) =>
+    Math.max(0, parseFloat(String(options?.topBarHeight)) || 0);

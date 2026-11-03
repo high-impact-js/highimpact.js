@@ -158,6 +158,7 @@ export interface AdvantageFormatOptions {
     closeButtonAnimationDuration?: number;
     downArrow?: boolean;
     height?: number;
+    topBarHeight?: number;
     sessionID?: string;
     /**
      * The duration in seconds before the format closes automatically.
