@@ -22,6 +22,9 @@
         }
     },
     "hooks": {
-        "after:bump": "node scripts/pin-docs-cdn.cjs ${version}"
+        "after:bump": [
+            "node scripts/pin-docs-cdn.cjs ${version}",
+            "npm run build"
+        ]
     }
 }
