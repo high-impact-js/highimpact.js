@@ -16,18 +16,21 @@ It's designed to securely and efficiently load the designated [format](formats.m
 
 ## Layout
 
-The wrapper is `display: block` and fills the width of its container (`width: 100%; box-sizing: border-box`). This stops it from collapsing to 0px in flex or grid layouts that would otherwise shrink it to its content. Formats set their own size on top of this, for example `100vw` for midscroll.
+When no high-impact format is active, the wrapper doesn't change your layout. It sizes and positions itself like the ad element it wraps, so a banner that is centered by its parent stays centered, and a banner in a plain block container keeps its usual place. When a format starts, the format sizes the wrapper itself, for example `100svw` for topscroll and `100vw` for midscroll.
 
-If you center a narrower banner with flex or grid alignment (`align-items: center`, `justify-content: center`, `justify-items: center`), the wrapper fills the row or column, so the banner sits at the left edge. To keep regular banners centered, center the ad element inside the wrapper while no format is active:
+### Custom templates with fixed-position content
+
+If you build your own ad template whose content is positioned out of the normal flow (for example a custom interscroller with a `position: fixed` creative clipped by its ad element), the wrapper has nothing to size itself by. In a parent that shrinks its children to their content, such as a flex column with `align-items: center`, it collapses to 0px wide.
+
+Give the wrapper a width for that template in your own CSS. Target the ad element's class so regular banners in the same slot are not affected:
 
 ```css
-advantage-wrapper:not([current-format]) > [slot="advantage-ad-slot"] {
-    width: fit-content;
-    margin-inline: auto;
+advantage-wrapper:has(> .my-interscroller) {
+    width: 100%;
 }
 ```
 
-Scope rules like this with `:not([current-format])`. Page styles on the wrapper and its ad element override the wrapper's built-in styles, including the sizes that high-impact formats set, so an unscoped `width` rule can break those formats.
+Page styles on `advantage-wrapper` override the sizes that high-impact formats set. Scope rules like this to your template, or add `:not([current-format])`, so they don't change how the formats render.
 
 ## Force Format
 
