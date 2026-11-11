@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.5](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.4...hijs-v0.14.5) (2026-11-11)
+
+
+### Bug Fixes
+
+* keep advantage-wrapper layout-neutral when no format is active ([#34](https://github.com/high-impact-js/highimpact.js/issues/34)) ([b71feb1](https://github.com/high-impact-js/highimpact.js/commit/b71feb1272c97bbc842feca1ee7ecbac64ec9a5a)), closes [#30](https://github.com/high-impact-js/highimpact.js/issues/30)
+
 ## [0.14.4](https://github.com/high-impact-js/highimpact.js/compare/hijs-v0.14.3...hijs-v0.14.4) (2026-11-03)
 
 
