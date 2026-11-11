@@ -1,4 +1,4 @@
-// Layout checks for <advantage-wrapper> with no format applied (issue #28, PR #30).
+// Layout checks for <advantage-wrapper> with no format applied.
 // Needs the dev server: `npm run dev` (Vite, port 5173).
 const URL = "http://localhost:5173/playground/wrapper-layout/";
 
@@ -21,19 +21,16 @@ const results = () =>
 const byCase = (all: LayoutResult[], name: string) =>
     all.find((r) => r.case === name)!;
 
+// Without a format the wrapper lays out like the ad element it wraps, so a
+// banner lands where it would without the wrapper.
 describe("advantage-wrapper layout without a format", () => {
     beforeEach(() => cy.viewport(1280, 900));
 
-    it("does not collapse to 0px around fixed-position content (issue #28)", () => {
-        results().then((all) => {
-            expect(byCase(all, "interscroller").wrapperWidth).to.equal(PARENT_WIDTH);
-        });
-    });
-
-    for (const name of ["block-text-center", "block-plain"]) {
-        it(`fills a block parent: ${name}`, () => {
+    for (const name of ["flex-col-center", "flex-row-center", "grid-center"]) {
+        it(`keeps a banner centred by a flex/grid parent: ${name}`, () => {
             results().then((all) => {
-                expect(byCase(all, name).wrapperWidth).to.equal(PARENT_WIDTH);
+                const r = byCase(all, name);
+                expect(r.centered, JSON.stringify(r)).to.equal(true);
             });
         });
     }
@@ -44,17 +41,26 @@ describe("advantage-wrapper layout without a format", () => {
         });
     });
 
-    // Known trade-off: the wrapper fills its container, so a narrower banner
-    // in a parent that centres via flex/grid alignment sits at the left edge.
-    // Publishers who need it centred can set margin:auto on the ad, or their
-    // own width on advantage-wrapper. If this starts failing, the default changed.
-    for (const name of ["flex-col-center", "flex-row-center", "grid-center"]) {
-        it(`fills a flex/grid centring parent, banner left-aligned: ${name}`, () => {
-            results().then((all) => {
-                const r = byCase(all, name);
-                expect(r.wrapperWidth, JSON.stringify(r)).to.equal(PARENT_WIDTH);
-                expect(r.bannerOffset, JSON.stringify(r)).to.equal(0);
-            });
+    it("leaves a banner at the start of a plain block parent", () => {
+        results().then((all) => {
+            expect(byCase(all, "block-plain").bannerOffset).to.equal(0);
         });
-    }
+    });
+
+    // Fixed-position content gives the wrapper no width to size itself by, so
+    // a shrinking parent collapses it. Publishers with such custom templates
+    // add their own width rule (see the Wrapper docs, "Layout").
+    it("collapses around fixed-position content without a publisher rule", () => {
+        results().then((all) => {
+            expect(byCase(all, "interscroller").wrapperWidth).to.equal(0);
+        });
+    });
+
+    it("fills the parent around fixed-position content with a publisher rule", () => {
+        results().then((all) => {
+            expect(byCase(all, "interscroller-with-rule").wrapperWidth).to.equal(
+                PARENT_WIDTH
+            );
+        });
+    });
 });

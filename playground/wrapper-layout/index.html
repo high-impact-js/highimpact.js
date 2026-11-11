@@ -48,6 +48,10 @@
                 pointer-events: none;
                 visibility: hidden;
             }
+            /* Publisher rule for a custom template with fixed-position content */
+            advantage-wrapper:has(> .custom-interscroller) {
+                width: 100%;
+            }
             #results {
                 margin: 24px 16px;
                 border-collapse: collapse;
@@ -66,7 +70,7 @@
             that served an ordinary banner) into a different parent layout.
             The script measures where the 300x250 banner lands.
         -->
-        <h2>flex column + align-items:center (Politiken, issue #28)</h2>
+        <h2>flex column + align-items:center</h2>
         <div class="case flex-col-center" data-case="flex-col-center">
             <advantage-wrapper>
                 <div slot="advantage-ad-slot">
@@ -111,7 +115,7 @@
             </advantage-wrapper>
         </div>
 
-        <h2>flex column + align-items:center, fixed-position interscroller (issue #28 bug)</h2>
+        <h2>flex column + align-items:center, fixed-position interscroller, no publisher rule</h2>
         <div class="case flex-col-center" data-case="interscroller">
             <advantage-wrapper>
                 <div slot="advantage-ad-slot">
@@ -120,6 +124,14 @@
             </advantage-wrapper>
         </div>
 
+        <h2>flex column + align-items:center, fixed-position interscroller with a publisher width rule</h2>
+        <div class="case flex-col-center" data-case="interscroller-with-rule">
+            <advantage-wrapper>
+                <div slot="advantage-ad-slot" class="custom-interscroller">
+                    <div class="interscroller"></div>
+                </div>
+            </advantage-wrapper>
+        </div>
         <table id="results">
             <thead>
                 <tr>

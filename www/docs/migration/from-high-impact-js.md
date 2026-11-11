@@ -218,9 +218,9 @@ Yes. The post-message protocol is fully supported.
 
 It is recommended to move the layout elements and styling to the new format integration, `formatIntegrations`. However, if you wish to continue with the same styling as before, extract the HTML and styling and apply it on `advantage:format-start` instead.
 
-### My centered banner now sits at the left edge. Why?
+### My custom ad template collapses to 0px wide inside the wrapper. Why?
 
-`<advantage-wrapper>` fills the width of its container, so a parent that centers its children with flex or grid alignment no longer centers the banner inside it. See [Wrapper → Layout](../concepts/wrapper.md#layout) for a rule that centers regular banners without affecting high-impact formats.
+When no format is active, `<advantage-wrapper>` sizes itself like the ad element it wraps. If your template's content is fixed-position, the wrapper has no content width, and a parent that shrinks its children (for example a flex column with `align-items: center`) collapses it. See [Wrapper → Layout](../concepts/wrapper.md#custom-templates-with-fixed-position-content) for a one-line CSS fix.
 
 ### I use Xandr instead of GAM. Does that work?
 
