@@ -77,6 +77,8 @@
         "docs:preview": "vitepress preview",
         "test": "jest",
         "test:package": "node scripts/test-package.cjs",
+        "verify:dist-version": "node scripts/verify-dist-version.cjs",
+        "prepublishOnly": "npm run verify:dist-version",
         "test-server": "node test-server.js",
         "release": "dotenv release-it --",
         "release:next": "dotenv release-it -- --preRelease=next",
