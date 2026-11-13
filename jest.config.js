@@ -1,7 +1,7 @@
 export default {
     preset: "ts-jest",
     testEnvironment: "jsdom",
-    roots: ["<rootDir>/src"],
+    roots: ["<rootDir>/src", "<rootDir>/bin"],
     testMatch: [
         "**/__tests__/**/*.+(ts|tsx|js)",
         "**/?(*.)+(spec|test).+(ts|tsx|js)"
